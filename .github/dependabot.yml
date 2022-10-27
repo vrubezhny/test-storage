@@ -9,8 +9,8 @@ updates:
   directory: "/"
   schedule:
     interval: daily
-- package-ecosystem: npm
-  directory: "/project"
-  schedule:
-    interval: daily
+$ - package-ecosystem: npm
+$   directory: "/project"
+$   schedule:
+$     interval: daily
   
