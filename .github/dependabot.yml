@@ -20,7 +20,7 @@ updates:
     interval: daily
   open-pull-requests-limit: 10
 - package-ecosystem: npm
-  directory: "eslint"
+  directory: "/eslint"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
