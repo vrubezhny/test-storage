@@ -41,6 +41,24 @@ jobs:
           ${{ runner.os }}-maven-
     - name: Get Dash license tool
       run: mvn -U dependency:get -Dartifact=org.eclipse.dash:org.eclipse.dash.licenses:0.0.1-SNAPSHOT  -DremoteRepositories="https://repo.eclipse.org/content/repositories/dash-licenses-snapshots"
+    - name: Get parameters
+      run |
+        dashArgs="common"
+        if [ ${{ inputs.request-review }} ]; then
+          echo ${dashArgs}  request review
+          if [[ $? == 0 ]]; then # All licenses are vetted
+            echo "::set-output name=build-succeeded::$(echo 1)"
+          else
+            echo "::set-output name=build-succeeded::$(echo 0)"
+          fi
+        else
+          mvn ${dashArgs}
+          if [[ $? != 0 ]]; then
+            echo "Committers can request a review by commenting '/request-license-review'"
+            exit 1
+          fi
+        fi
+
     - name: Prepare ESLint NPM deps
       run: npm install --no-bin-links --ignore-scripts  eslint --prefix eslint
     - name: License check ESLint NPM deps
