@@ -45,7 +45,7 @@ jobs:
       run: npm install --no-bin-links --ignore-scripts  eslint --prefix eslint
     - name: License check ESLint NPM deps
       run: java -jar $(ls ~/.m2/repository/org/eclipse/dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT/org.eclipse.dash.licenses-*.jar | tail -n 1) eslint/package-lock.json -excludeSources local
-    - name: Prepare ngular-App NPM deps
+    - name: Prepare Angular-App NPM deps
       run: npm install --no-bin-links --ignore-scripts  angular-app  --prefix angular-app
-    - name: License check ESLint NPM deps
+    - name: License check Angular-App NPM deps
       run: java -jar $(ls ~/.m2/repository/org/eclipse/dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT/org.eclipse.dash.licenses-*.jar | tail -n 1) angular-app/package-lock.json -excludeSources local
