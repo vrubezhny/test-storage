@@ -24,6 +24,8 @@ jobs:
 #    secrets:
 #      gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
   npm-check:
+    if: github.event_name != 'issue_comment' || ( github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review') )
+    # Run on all non-comment events specified by the calling workflow and for comments on PRs that have a corresponding body.
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -44,15 +46,15 @@ jobs:
     - name: Get parameters
       run: |
         dashArgs="common"
-        if [ ${{ inputs.request-review }} ]; then
-          echo ${dashArgs}  request review
+        if [ ${{ github.event_name == 'issue_comment' }} ]; then
+          echo RUNNING WITH REQUEST REVIEW: ${dashArgs}  request review
           if [[ $? == 0 ]]; then # All licenses are vetted
             echo "::set-output name=build-succeeded::$(echo 1)"
           else
             echo "::set-output name=build-succeeded::$(echo 0)"
           fi
         else
-          mvn ${dashArgs}
+          echo RUNNING ONLY CHECK  ${dashArgs}
           if [[ $? != 0 ]]; then
             echo "Committers can request a review by commenting '/request-license-review'"
             exit 1
