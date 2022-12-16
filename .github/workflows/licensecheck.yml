@@ -40,7 +40,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: Get Dash license tool
-      run: mvn -U dependency:get -Dartifact=org.eclipse.dash:org.eclipse.dash.licenses:0.0.1-SNAPSHOT
+      run: mvn -U dependency:get -Dartifact=org.eclipse.dash:org.eclipse.dash.licenses:0.0.1-SNAPSHOT  -DremoteRepositories="https://repo.eclipse.org/content/repositories/dash-licenses-snapshots"
     - name: Prepare ESLint NPM deps
       run: npm install --no-bin-links --ignore-scripts  eslint --prefix eslint
     - name: License check ESLint NPM deps
