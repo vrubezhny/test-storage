@@ -1,23 +1,30 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
 name: License check
 
 on:
   push:
     branches: 
       - 'master'
-      - 'tycho-*'
   pull_request:
     branches: 
      - 'master'
-     - 'tycho-*'
-
+  issue_comment:
+    types: [created]
+    
 jobs:
-  build:
-
+#  call-mvn-license-check:
+#    uses: eclipse/dash-licenses/.github/workflows/mavenLicenseCheck.yml@master
+#    with:
+#      projectId: tools.wildwebdeveloper
+#    secrets:
+#      gitlabAPIToken: ${{ secrets.GITLAB_API_TOKEN }}
+  npm-check:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -32,7 +39,13 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-    - name: License check
-      run: | 
-        mvn -U -V -e -B -ntp org.eclipse.dash:license-tool-plugin:license-check --file project/package.json
-        
+    - name: Get Dash license tool
+      run: mvn -U dependency:get -Dartifact=org.eclipse.dash:org.eclipse.dash.licenses:0.0.1-SNAPSHOT
+    - name: Prepare ESLint NPM deps
+      run: npm install --no-bin-links --ignore-scripts  eslint --prefix eslint
+    - name: License check ESLint NPM deps
+      run: java -jar $(ls ~/.m2/repository/org/eclipse/dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT/org.eclipse.dash.licenses-*.jar | tail -n 1) eslint/package-lock.json -excludeSources local
+    - name: Prepare ngular-App NPM deps
+      run: npm install --no-bin-links --ignore-scripts  angular-app  --prefix angular-app
+    - name: License check ESLint NPM deps
+      run: java -jar $(ls ~/.m2/repository/org/eclipse/dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT/org.eclipse.dash.licenses-*.jar | tail -n 1) angular-app/package-lock.json -excludeSources local
