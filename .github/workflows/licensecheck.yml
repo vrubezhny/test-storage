@@ -45,7 +45,7 @@ jobs:
       run: mvn -U dependency:get -Dartifact=org.eclipse.dash:org.eclipse.dash.licenses:0.0.1-SNAPSHOT  -DremoteRepositories="https://repo.eclipse.org/content/repositories/dash-licenses-snapshots"
     - name: Get parameters
       run: |
-        echo ${github.event_name}
+        echo EVENT: ${{ github.event_name }} 
         dashArgs="common"
         if [ ${{ github.event_name == 'issue_comment' }} ]; then
           echo RUNNING WITH REQUEST REVIEW: ${dashArgs}  request review
