@@ -47,7 +47,7 @@ jobs:
       run: |
         echo EVENT: ${{ github.event_name }} 
         dashArgs="common"
-        if [ ${{ github.event_name == 'issue_comment' }} ]; then
+        if [ ${{ github.event_name != 'issue_comment' }} ]; then
           echo RUNNING WITH REQUEST REVIEW: ${dashArgs}  request review
           if [[ $? == 0 ]]; then # All licenses are vetted
             echo "::set-output name=build-succeeded::$(echo 1)"
