@@ -53,9 +53,9 @@ jobs:
         projectId="tools.wildwebdeveloper"
         gitlabAPIToken="false-token"
 
-	      exitStatus=0
-	      mkdir -p target/dash
-	
+        exitStatus=0
+        mkdir -p target/dash
+
         dashLicenseToolJar=$(ls ~/.m2/repository/org/eclipse/dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT/org.eclipse.dash.licenses-*.jar | tail -n 1)
         echo "Dash License Tool: ${dashLicenseTool}"
         npmCommonArgs=" --no-bin-links --ignore-scripts"
@@ -83,8 +83,8 @@ jobs:
           echo "Processing: npm install ${npmCommonArgs} ${projectName} --prefix ${projectPath}"
           npm install $npmCommonArgs $projectName --prefix $projectPath
 
-#          echo "Verifying: ${projectPath}/package-lock.json"
-#          echo "java -jar ${dashLicenseToolJar} ${dashArgs} ${projectPath}/package-lock.json"
+          echo "Verifying: ${projectPath}/package-lock.json"
+          echo "java -jar ${dashLicenseToolJar} ${dashArgs} ${projectPath}/package-lock.json"
           java -jar ${dashLicenseToolJar} ${dashArgs} ${projectPath}/package-lock.json
           if [[ $? != 0 ]]; then
             exitStatus=$? # Save for future
