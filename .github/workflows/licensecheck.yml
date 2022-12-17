@@ -49,6 +49,7 @@ jobs:
         dashArgs="common"
         echo parameters set requestReview: ${requestReview} 
         echo parameters set dashArgs: ${dashArgs} 
+        echo "request-review=1" >> $GITHUB_ENV
     - name: Set request parameters
       if: github.event_name == 'issue_comment'
       run: |
@@ -59,8 +60,18 @@ jobs:
       # Run only for comments on PRs that have a corresponding body.
     - name: Run check
       run: |
-        echo Using requestReview: ${requestReview} 
-        echo Using dashArgs:${dashArgs} 
+        dashArgs="common"
+        if [ ${env.request_review} ]; then 
+          echo RUNNING WITH REQUEST REVIEW: ${dashArgs} 
+          dashArgs="${dashArgs} request review"
+          requestReview=true
+        else
+          echo RUNNING ONLY CHECK: ${dashArgs}
+          requestReview=false
+        fi
+
+        echo Using dashArgs: ${dashArgs} 
+
         if [ $requestReview == true ]; then
           echo RUNNING WITH REQUEST REVIEW: ${dashArgs} 
           if [[ $? == 0 ]]; then # All licenses are vetted
