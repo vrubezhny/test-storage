@@ -43,19 +43,30 @@ jobs:
           ${{ runner.os }}-maven-
     - name: Get Dash license tool
       run: mvn -U dependency:get -Dartifact=org.eclipse.dash:org.eclipse.dash.licenses:0.0.1-SNAPSHOT  -DremoteRepositories="https://repo.eclipse.org/content/repositories/dash-licenses-snapshots"
-    - name: Get parameters
+    - name: Set common parameters
       run: |
-        echo EVENT: ${{ github.event_name }} 
-        dashArgs="common"
-        if [ ${{ github.event_name != 'issue_comment' }} ]; then
-          echo RUNNING WITH REQUEST REVIEW: ${dashArgs}  request review
+        requestReview = false
+        dashArgs = "common"
+        echo parameters set: ${dashArgs} 
+    - name: Set request parameters
+      if: github.event_name != 'issue_comment' || ( github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review') )
+      run: |
+        requestReview = true
+        dashArgs = "${dashArgs} request review"
+        echo request review parameters set: ${dashArgs} 
+      # Run only for comments on PRs that have a corresponding body.
+    - name: Run check
+      run: |
+        echo Using dashArgs:${dashArgs} 
+        if [[ ${requestReview} == true ]]; then
+          echo RUNNING WITH REQUEST REVIEW: ${dashArgs} 
           if [[ $? == 0 ]]; then # All licenses are vetted
             echo "::set-output name=build-succeeded::$(echo 1)"
           else
             echo "::set-output name=build-succeeded::$(echo 0)"
           fi
         else
-          echo RUNNING ONLY CHECK  ${dashArgs}
+          echo RUNNING ONLY CHECK: ${dashArgs}
           if [[ $? != 0 ]]; then
             echo "Committers can request a review by commenting '/request-license-review'"
             exit 1
