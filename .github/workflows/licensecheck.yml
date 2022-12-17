@@ -50,9 +50,9 @@ jobs:
         echo parameters set requestReview: ${requestReview} 
         echo parameters set dashArgs: ${dashArgs} 
     - name: Set request parameters
-      if: github.event_name != 'issue_comment' || ( github.event.issue.pull_request != '' && (github.event.comment.body == '/request-license-review') )
+      if: github.event_name == 'issue_comment'
       run: |
-        requestReview="true"
+        requestReview=true
         dashArgs="${dashArgs} request review"
         echo parameters set requestReview: ${requestReview} 
         echo parameters set dashArgs: ${dashArgs} 
