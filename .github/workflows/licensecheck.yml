@@ -61,7 +61,7 @@ jobs:
     - name: Run check
       run: |
         dashArgs="common"
-        if [ ${env.request_review} ]; then 
+        if [ ${ {env.request_review }} ]; then 
           echo RUNNING WITH REQUEST REVIEW: ${dashArgs} 
           dashArgs="${dashArgs} request review"
           requestReview=true
