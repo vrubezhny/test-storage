@@ -57,35 +57,36 @@ jobs:
         mkdir -p target/dash
 
         dashLicenseToolJar=$(ls ~/.m2/repository/org/eclipse/dash/org.eclipse.dash.licenses/0.0.1-SNAPSHOT/org.eclipse.dash.licenses-*.jar | tail -n 1)
-        echo "Dash License Tool: ${dashLicenseTool}"
+        echo "Dash License Tool: $dashLicenseTool"
         npmCommonArgs=" --no-bin-links --ignore-scripts"
         dashCommonArgs="-excludeSources local -summary target/dash/npm-deps-summary"
         
         mkdir -p target/dash # Make directory for dash-license review summary 
 
-        dashArgs="${dashCommonArgs}"
+        dashArgs="$dashCommonArgs"
         if [ ${{ env.request-review }} ]; then 
           dashArgs="$dashCommonArgs -review -project $projectId -token $gitlabAPIToken" # Add "-project <Project Name> -token <Token>" here when a review is required
-          echo "RUNNING WITH REQUEST REVIEW: ${dashArgs}"
+          echo "RUNNING WITH REQUEST REVIEW: $dashArgs"
         else
-          echo "RUNNING ONLY CHECK: ${dashArgs}"         
+          echo "RUNNING ONLY CHECK: $dashArgs"
         fi
 
         for p in $(find */ -print | grep -wv node_modules | grep -wv target | grep package.json)
         do 
-          echo "Working $p filename ..."
+          echo ""
+          echo "--- Checking project [$projectPath] ---"
           projectPath="${p%%/package.json*}"
           echo "Project path: ${projectPath}"
           projectName="${projectPath##*/}"        # remove longest prefix `*/`
-          echo "Project name: ${projectName}"
+          echo "Project name: $projectName"
 
-          echo "Installing: ${projectPath}/${projectName}/package-lock.json"
-          echo "Processing: npm install ${npmCommonArgs} ${projectName} --prefix ${projectPath}"
+          echo "Installing: $projectPath/$projectName/package-lock.json"
+          echo "Processing: npm install $npmCommonArgs $projectName --prefix $projectPath"
           npm install $npmCommonArgs $projectName --prefix $projectPath
 
-          echo "Verifying: ${projectPath}/package-lock.json"
-          echo "java -jar ${dashLicenseToolJar} ${dashArgs} ${projectPath}/package-lock.json"
-          java -jar ${dashLicenseToolJar} ${dashArgs} ${projectPath}/package-lock.json
+          echo "Verifying: $projectPath/package-lock.json"
+          echo "java -jar $dashLicenseToolJar $dashArgs $projectPath/package-lock.json"
+          java -jar $dashLicenseToolJar $dashArgs $projectPath/package-lock.json
           if [[ $? != 0 ]]; then
             exitStatus=$? # Save for future
           fi
