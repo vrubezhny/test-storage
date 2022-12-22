@@ -58,7 +58,7 @@ jobs:
 
     - uses: actions/checkout@v3
       if: github.event_name == 'push' || github.event_name == 'pull_request'   
-    - uses: actions/github-script@v3
+    - uses: actions/github-script@v6
       if: github.event_name == 'issue_comment' 
       id: get-pr
       with:
@@ -144,19 +144,21 @@ jobs:
           fi
         done
 
-        if [ ${{ env.request-review }} ]; then 
-          echo ""
-          if [[ $exitStatus == 0 ]]; then # All licenses are vetted
-            echo "::set-output name=build-succeeded::$(echo 1)"
-            echo "All licenses are vetted"
-          else
-            echo "::set-output name=build-succeeded::$(echo 0)"
-            echo "Some contents requires a review"
-          fi
+        echo ""
+        if [[ $exitStatus == 0 ]]; then # All licenses are vetted
+          # echo "::set-output name=build-succeeded::$(echo 1)"
+          echo "build-succeeded=1" >> $GITHUB_OUTPUT
+          echo "All licenses are vetted"
         else
-          if [[ $exitStatus != 0 ]]; then
+          # echo "::set-output name=build-succeeded::$(echo 0)"
+          echo "build-succeeded=0" >> $GITHUB_OUTPUT
+          if [ ${{ env.request-review }} ]; then 
+            echo "Some contents requires a review"
             echo ""
+            echo "The NPM dependency License Check review summary is saved in 'target/dash/npm-review-summary'" 
+          else
             echo "Committers can request a review by commenting '/request-license-review'"
             exit 1
           fi
         fi
+        echo ""
