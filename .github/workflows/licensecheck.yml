@@ -41,13 +41,18 @@ jobs:
         echo "github.event.issue: ${{ github.event.issue }}"
         echo "github.event.issue.id: ${{ github.event.issue.id }}"
 
-        echo "github.event.issue.pull_request: ${{ github.event.issue.pull_request }}"
+        echo "github.event.pull_request: ${{ github.event.issue.pull_request }}"
         echo "github.event.pull_request.id: ${{ github.event.pull_request.id }}"
         echo "github.event.pull_request.merge_commit_sha: ${{ github.event.pull_request.merge_commit_sha }}"
         echo "github.event.pull_request.head.ref: ${{ github.event.pull_request.head.ref }}"
         echo "github.event.pull_request.head.sha: ${{ github.event.pull_request.head.sha }}"
         
         echo "github.event.issue.pull_request: ${{ github.event.issue.pull_request }}"
+        echo "github.event.issue.pull_request.id: ${{ github.event.issue.pull_request.id }}"
+        echo "github.event.issue.pull_request.merge_commit_sha: ${{ github.event.issue.pull_request.merge_commit_sha }}"
+        echo "github.event.issue.pull_request.head.ref: ${{ github.event.issue.pull_request.head.ref }}"
+        echo "github.event.issue.pull_request.head.sha: ${{ github.event.issue.pull_request.head.sha }}"
+
         echo "github.event.comment.body: ${{ github.event.comment.body }}"
 
     - uses: actions/checkout@v3
