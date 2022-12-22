@@ -28,7 +28,20 @@ jobs:
     # Run on all non-comment events specified by the calling workflow and for comments on PRs that have a corresponding body.
     runs-on: ubuntu-latest
     steps:
+    - name: Test Variables
+      run: |
+        echo "github.event_name: ${{ github.event_name }}"
+        echo "github.event.issue.pull_request: ${{ github.event.issue.pull_request }}"
+        echo "github.event.pull_request.head.sha: ${{ github.event.pull_request.head.sha }}"
+        echo "github.event.issue.pull_request: ${{ github.event.issue.pull_request }}"
+        echo "github.event.comment.body: ${{ github.event.comment.body }}"
+
     - uses: actions/checkout@v3
+      if: ${{ github.event.pull_request.head.sha }}
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+    - uses: actions/checkout@v3
+      if: github.event_name == 'push' || github.event_name == 'pull_request'    
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -73,27 +86,28 @@ jobs:
 
         for p in $(find */ -print | grep -wv node_modules | grep -wv target | grep package.json)
         do 
-          echo ""
-          echo "--- Checking project [$projectPath] ---"
-          projectPath="${p%%/package.json*}"
-          echo "Project path: ${projectPath}"
+          projectPath="${p%%/package.json*}"      # remove prefix '/package.json'
           projectName="${projectPath##*/}"        # remove longest prefix `*/`
+          
+          echo ""
+          echo "------ Checking project [$projectPath] ------"
+          echo "Project path: ${projectPath}"
           echo "Project name: $projectName"
 
           echo "Installing: $projectPath/$projectName/package-lock.json"
-          echo "Processing: npm install $npmCommonArgs $projectName --prefix $projectPath"
+          echo "Executing: npm install $npmCommonArgs $projectName --prefix $projectPath"
           npm install $npmCommonArgs $projectName --prefix $projectPath
 
           echo "Verifying: $projectPath/package-lock.json"
-          echo "java -jar $dashLicenseToolJar $dashArgs $projectPath/package-lock.json"
+          echo "Ececuting: java -jar $dashLicenseToolJar $dashArgs $projectPath/package-lock.json"
           java -jar $dashLicenseToolJar $dashArgs $projectPath/package-lock.json
           if [[ $? != 0 ]]; then
             exitStatus=$? # Save for future
           fi
-          echo ""
         done
 
         if [ ${{ env.request-review }} ]; then 
+          echo ""
           if [[ $exitStatus == 0 ]]; then # All licenses are vetted
             echo "::set-output name=build-succeeded::$(echo 1)"
             echo "All licenses are vetted"
@@ -102,7 +116,8 @@ jobs:
             echo "Some contents requires a review"
           fi
         else
-          if [[ $? != 0 ]]; then
+          if [[ $exitStatus != 0 ]]; then
+            echo ""
             echo "Committers can request a review by commenting '/request-license-review'"
             exit 1
           fi
