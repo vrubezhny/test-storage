@@ -6,6 +6,7 @@
     <groupId>org.test.modules</groupId>
     <artifactId>ModuleA</artifactId>
     <version>${modules-version}</version>
+    <relativePath>../../</relativePath>
   </parent>
   
   <groupId>org.test.modules</groupId>
