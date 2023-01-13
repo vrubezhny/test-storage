@@ -13,7 +13,7 @@
 		<jgit.dirtyWorkingTree>error</jgit.dirtyWorkingTree>
 		<enforcer.plugin.version>3.0.0</enforcer.plugin.version>
 		<maven-enforcer-rule.version>3.6.3</maven-enforcer-rule.version>
-    <modules-version>0.0.1-SNAPSHOT</modules-version>
+		<modules-version>0.0.2-SNAPSHOT</modules-version>
 	</properties>
 
   <groupId>org.test.modules</groupId>
