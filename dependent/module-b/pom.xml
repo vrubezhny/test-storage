@@ -4,13 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.test.modules</groupId>
   <artifactId>ModuleB</artifactId>
-  <version>${modules-version}</version>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <dependencies>
     <dependency>
       <groupId>org.test.modules</groupId>
       <artifactId>ModuleA</artifactId>
-      <version>${modules-version}</version>
+      <version>0.0.1-SNAPSHOT</version>
       <relativePath>../../</relativePath>
     </dependency>
   </dependencies>
