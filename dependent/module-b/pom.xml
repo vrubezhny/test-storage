@@ -10,7 +10,8 @@
     <dependency>
       <groupId>org.test.modules</groupId>
       <artifactId>ModuleA</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${modules-version}</version>
+      <relativePath>../../</relativePath>
     </dependency>
   </dependencies>
 </project>
