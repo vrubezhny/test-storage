@@ -1,7 +1,12 @@
 version: 2
 updates:
 - package-ecosystem: maven
-  directory: "/dependent"
+  directory: "/dependent/module-b"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+- package-ecosystem: maven
+  directory: "/dependent/module-c"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
