@@ -7,18 +7,28 @@ updates:
   open-pull-requests-limit: 10
 - package-ecosystem: maven
   directory: "/angular-app"
+  schedule:
+    interval: monthy
   open-pull-requests-limit: 0
 - package-ecosystem: maven
   directory: "/envtest"
+  schedule:
+    interval: monthy
   open-pull-requests-limit: 0
 - package-ecosystem: maven
   directory: "/eslint"
+  schedule:
+    interval: monthy
   open-pull-requests-limit: 0
 - package-ecosystem: maven
   directory: "/et4472"
+  schedule:
+    interval: monthy
   open-pull-requests-limit: 0
 - package-ecosystem: maven
   directory: "/project"
+  schedule:
+    interval: monthy
   open-pull-requests-limit: 0
 - package-ecosystem: github-actions
   directory: "/"
