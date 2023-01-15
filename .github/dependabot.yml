@@ -1,15 +1,25 @@
 version: 2
 updates:
 - package-ecosystem: maven
-  directory: "/dependent/module-b"
+  directory: "/"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
 - package-ecosystem: maven
-  directory: "/dependent/module-c"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+  directory: "/angular-app"
+  open-pull-requests-limit: 0
+- package-ecosystem: maven
+  directory: "/envtest"
+  open-pull-requests-limit: 0
+- package-ecosystem: maven
+  directory: "/eslint"
+  open-pull-requests-limit: 0
+- package-ecosystem: maven
+  directory: "/et4472"
+  open-pull-requests-limit: 0
+- package-ecosystem: maven
+  directory: "/project"
+  open-pull-requests-limit: 0
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
