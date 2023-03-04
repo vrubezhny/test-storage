@@ -29,14 +29,13 @@ jobs:
         cache: maven
     - name: Env.PATH
       run: echo ${env:PATH}
-    - name: Env.GITHUB_WORKSPACE
-      run: echo ${env:GITHUB_WORKSPACE}
-    - name: Dir (env.GITHUB_WORKSPACE)
-      run: dir ${env:GITHUB_WORKSPACE}
-    - name: Free Space (env.GITHUB_WORKSPACE)
-      run: df -h ${env:GITHUB_WORKSPACE}
+    - name: EBefore nv.GITHUB_WORKSPACE
+      run: echo ${env:GITHUB_WORKSPACE} && dir ${env:GITHUB_WORKSPACE} && df -h ${env:GITHUB_WORKSPACE}
     - name: Build with Maven
+      shell: pwsh
       run: |
-        mvn -B clean verify --file test-env/pom.xml
+        mvn -B  -Dmaven.repo.local="~/.m2/repository" clean verify --file test-env/pom.xml
+    - name: After nv.GITHUB_WORKSPACE
+      run: echo ${env:GITHUB_WORKSPACE} && dir ${env:GITHUB_WORKSPACE} && df -h ${env:GITHUB_WORKSPACE}
     #- name: Env -Dmaven.repo.local=~/.m2/repository 
     #  run: dir ${{ GITHUB_WORKSPACE }}
