@@ -31,7 +31,11 @@ jobs:
       run: echo ${env:PATH}
     - name: Env.GITHUB_WORKSPACE
       run: echo ${env:GITHUB_WORKSPACE}
-    #- name: Build with Maven
-    #  run: mvn -B package --file pom.xml
+    - name: Dir (env.GITHUB_WORKSPACE)
+      run: dir ${env:GITHUB_WORKSPACE}
+    - name: Free Space (env.GITHUB_WORKSPACE)
+      run: df -h ${env:GITHUB_WORKSPACE}
+    - name: Build with Maven
+      run: mvn -B -Dmaven.repo.local=.${env:GITHUB_WORKSPACE}/.m2/repository clean --file pom.xml
     #- name: Env
     #  run: dir ${{ GITHUB_WORKSPACE }}
