@@ -36,6 +36,6 @@ jobs:
     - name: Free Space (env.GITHUB_WORKSPACE)
       run: df -h ${env:GITHUB_WORKSPACE}
     - name: Build with Maven
-      run: mvn -B clean verify --file test-env/pom.xml -Dmaven.repo.local=".m2\repository"
+      run: mvn -B clean verify --file test-env/pom.xml -Dmaven.repo.local=~/.m2/repository
     #- name: Env
     #  run: dir ${{ GITHUB_WORKSPACE }}
