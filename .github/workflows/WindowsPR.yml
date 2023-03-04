@@ -34,7 +34,8 @@ jobs:
     - name: Build with Maven
       shell: pwsh
       run: |
-        echo %MAVEN_HOME%
+        echo $MVEN_HOME
+        mvn --help
         mvn -B  -Dmaven.repo.local="~/.m2/repository" clean verify --file test-env/pom.xml
     - name: After nv.GITHUB_WORKSPACE
       run: echo ${env:GITHUB_WORKSPACE} && dir ${env:GITHUB_WORKSPACE} && df -h ${env:GITHUB_WORKSPACE}
