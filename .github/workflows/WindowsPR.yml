@@ -36,7 +36,7 @@ jobs:
       run: |
         echo $MVEN_HOME
         mvn --help
-        mvn -B -D "maven.repo.local=~/.m2/repository" clean verify --file test-env/pom.xml
+        mvn -B -D "maven.repo.local=${env:GITHUB_WORKSPACE}/.m2/repository" clean verify --file test-env/pom.xml
     - name: After nv.GITHUB_WORKSPACE
       run: echo ${env:GITHUB_WORKSPACE} && dir ${env:GITHUB_WORKSPACE} && df -h ${env:GITHUB_WORKSPACE}
     #- name: Env -Dmaven.repo.local=~/.m2/repository 
