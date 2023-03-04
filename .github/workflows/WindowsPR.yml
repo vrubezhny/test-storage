@@ -28,9 +28,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Env.PATH
-    - run: echo ${env:PATH}
+      run: echo ${env:PATH}
     - name: Env.GITHUB_WORKSPACE
-    - run: echo ${env:GITHUB_WORKSPACE}
+      run: echo ${env:GITHUB_WORKSPACE}
     #- name: Build with Maven
     #  run: mvn -B package --file pom.xml
     #- name: Env
