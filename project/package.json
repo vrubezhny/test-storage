@@ -11,7 +11,6 @@
     "vscode-css-languageservice": "6.2.10",
     "vscode-html-languageservice": "5.1.1",
     "vscode-json-languageservice": "5.3.7",
-    "eslint-server": "file:target/eslint-server-2.4.1.tgz",
     "@vue/language-server" : "1.8.22",
     "fsevents" : "2.3.3"
   }
