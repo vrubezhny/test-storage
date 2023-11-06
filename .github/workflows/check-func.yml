@@ -31,6 +31,8 @@ jobs:
             old_url=`jq -r .func.platform.${platform}.url src/tools.json`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_FUNC_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
             echo "${old_url}"
+            echo "${new_url}"
+            echo "${new_url}.sha256"
             checksum=`curl -s ${new_url}.sha256`
             jq --indent 4 ".func.platform.${platform}.url = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform.${platform}.sha256sum = \"${checksum}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
