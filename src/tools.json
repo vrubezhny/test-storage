@@ -63,22 +63,22 @@
         "description": "Function CLI tool",
         "vendor": "Red Hat, Inc.",
         "name": "func",
-        "version": "1.11.0",
-        "versionRange": "1.11.0",
-        "versionRangeLabel": "v1.11.0",
+        "version": "knatie-v1.12.0",
+        "versionRange": "^knatie-v1.12.0",
+        "versionRangeLabel": "version >= knatie-v1.12.0",
         "dlFileName": "func",
         "cmdFileName": "func",
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_windows_amd64.exe",
-                "sha256sum": "eac88926c302bc00fa7d8838294b6adf638a6f2b844198336a23007d0679ae25",
+                "url": "https://github.com/knative/func/releases/download/knative-vknatie-v1.12.0/func_windows_amd64.exe",
+                "sha256sum": "Not Found",
                 "dlFileName": "func_windows_amd64.exe",
                 "cmdFileName": "func.exe"
             },
             "darwin": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_darwin_amd64",
-                "sha256sum": "46a3a7dada63f9285d93b24f393ccff99125b4e3980139e43aa04b0f17e2dfd6",
+                "url": "https://github.com/knative/func/releases/download/knative-vknatie-v1.12.0/func_darwin_amd64",
+                "sha256sum": "Not Found",
                 "dlFileName": "func_darwin_amd64",
                 "cmdFileName": "func"
             },
@@ -89,8 +89,8 @@
                 "cmdFileName": "func"
             },
             "linux": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_linux_amd64",
-                "sha256sum": "cb9cfe6772273a0b0c2d0736b7366ec515819a8a0a0cfeb2c7f50aa4ac845ca1",
+                "url": "https://github.com/knative/func/releases/download/knative-vknatie-v1.12.0/func_linux_amd64",
+                "sha256sum": "Not Found",
                 "dlFileName": "func_linux_amd64",
                 "cmdFileName": "func"
             },
