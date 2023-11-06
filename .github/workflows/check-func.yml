@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "REPO_FUNC_VERSION=$(cat src/tools.json | jq -r .func.version)" >> $GITHUB_ENV
           LATEST_TOOL_RELEASE_RESP=$(gh release --repo ${{ env.TOOL_REPO }} view --json tagName,url)
-          echo "LATEST_TOOL_RELEASE=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .tagName | sed 's|v||')" >> $GITHUB_ENV
+          echo "LATEST_TOOL_RELEASE=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .tagName | sed 's|knative-v||')" >> $GITHUB_ENV
           echo "LATEST_TOOL_URL=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .url)" >> $GITHUB_ENV
       - name: Find existing PR for FUNC version
         run: |
@@ -43,3 +43,4 @@ jobs:
           git commit -am "Update func to ${{ env.LATEST_TOOL_RELEASE }}"
           git push origin "func-${{ env.LATEST_TOOL_RELEASE }}"
           gh pr create --title "Update func to ${{ env.LATEST_TOOL_RELEASE }}" --body "See ${{ env.LATEST_TOOL_URL }}"
+

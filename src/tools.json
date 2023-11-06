@@ -3,27 +3,27 @@
         "description": "odo CLI",
         "vendor": "Red Hat, Inc.",
         "name": "odo",
-        "version": "3.15.0",
-        "versionRange": "^3.15.0",
-        "versionRangeLabel": "version >= 3.15.0",
+        "version": "3.12.0",
+        "versionRange": "^3.12.0",
+        "versionRangeLabel": "version >= 3.12.0",
         "dlFileName": "odo",
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/odo/v3.15.0/odo-windows-amd64.exe.zip",
-                "sha256sum": "cf8ddcd46025325dd9e5f8b5f38ef8ea45d49a79c127b48c2b9c5b2ccb93afaa",
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/odo/v3.12.0/odo-windows-amd64.exe.zip",
+                "sha256sum": "3a96e70018fe02cb1359ed9eae5e5391fb79b06a1017990c05944241f6cda596",
                 "dlFileName": "odo-windows-amd64.exe.zip",
                 "cmdFileName": "odo-windows-amd64.exe"
             },
             "darwin": {
-                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/odo/v3.15.0/odo-darwin-amd64.tar.gz",
-                "sha256sum": "45e96d490c593d994689156d17f5e1f1bf208f651ce19d74160ef12cb741b113",
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/odo/v3.12.0/odo-darwin-amd64.tar.gz",
+                "sha256sum": "4e66790b8e270af14fd76d3231ea69ef8e51b57ea36af40ebdda52c0504d2122",
                 "dlFileName": "odo-darwin-amd64.tar.gz",
                 "cmdFileName": "odo-darwin-amd64"
             },
             "linux": {
-                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/odo/v3.15.0/odo-linux-amd64.tar.gz",
-                "sha256sum": "77e999ec3eca99ea17e9345496866afc9c1ae67d3069c9433659b801dab9c302",
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/odo/v3.12.0/odo-linux-amd64.tar.gz",
+                "sha256sum": "07a5b815310f5a270d9db330a0befd25a80c6206f080949df885f4b6c95e29fa",
                 "dlFileName": "odo-linux-amd64.tar.gz",
                 "cmdFileName": "odo"
             }
@@ -63,40 +63,40 @@
         "description": "Function CLI tool",
         "vendor": "Red Hat, Inc.",
         "name": "func",
-        "version": "1.11.0",
-        "versionRange": "1.11.0",
-        "versionRangeLabel": "v1.11.0",
+        "version": "1.10.0",
+        "versionRange": "1.10.0",
+        "versionRangeLabel": "v1.10.0",
         "dlFileName": "func",
         "cmdFileName": "func",
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_windows_amd64.exe",
-                "sha256sum": "eac88926c302bc00fa7d8838294b6adf638a6f2b844198336a23007d0679ae25",
+                "url": "https://github.com/knative/func/releases/download/knative-v1.10.0/func_windows_amd64.exe",
+                "sha256sum": "0d1ac065f67b2461c709a1cdbd477d26eb57a53635892d1726b945fc9e582409",
                 "dlFileName": "func_windows_amd64.exe",
                 "cmdFileName": "func.exe"
             },
             "darwin": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_darwin_amd64",
-                "sha256sum": "46a3a7dada63f9285d93b24f393ccff99125b4e3980139e43aa04b0f17e2dfd6",
+                "url": "https://github.com/knative/func/releases/download/knative-v1.10.0/func_darwin_amd64",
+                "sha256sum": "de953a9167f28af5c1f0acfe67e2c851e999aa1f6efed5a326083ba569cc2381",
                 "dlFileName": "func_darwin_amd64",
                 "cmdFileName": "func"
             },
             "darwin-arm64": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_darwin_arm64",
-                "sha256sum": "84682105d562611f515dc8cd83f0761bfe0b35dab5a1961b48b1414b1d6a191b",
+                "url": "https://github.com/knative/func/releases/download/knative-v1.10.0/func_darwin_arm64",
+                "sha256sum": "740bef3723a30861149e86ea0505e32be74112bafa892a8d0a86d2526c41cf71",
                 "dlFileName": "func_darwin_arm64",
                 "cmdFileName": "func"
             },
             "linux": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_linux_amd64",
-                "sha256sum": "cb9cfe6772273a0b0c2d0736b7366ec515819a8a0a0cfeb2c7f50aa4ac845ca1",
+                "url": "https://github.com/knative/func/releases/download/knative-v1.10.0/func_linux_amd64",
+                "sha256sum": "5069e5fb8d1b3742c4df8e8bbbeb7737f3bf7aab175bd8e76a900b86bc28239a",
                 "dlFileName": "func_linux_amd64",
                 "cmdFileName": "func"
             },
             "linux-arm64": {
-                "url": "https://github.com/knative/func/releases/download/knative-v1.11.0/func_linux_arm64",
-                "sha256sum": "fff8871edbe4667f095df0f242e7cc52ecd92350197a066fb1a62fdcaf4e7ed1",
+                "url": "https://github.com/knative/func/releases/download/knative-v1.10.0/func_linux_arm64",
+                "sha256sum": "9004e811ad5cfe042e4e2009735447c9e1a60ea8b1a3c2c824dbf117eead7c22",
                 "dlFileName": "func_linux_arm64",
                 "cmdFileName": "func"
             }
@@ -136,7 +136,8 @@
         "description": "crc openshift container",
         "vendor": "Red Hat, Inc.",
         "name": "crc",
-        "crcVersion": "2.28.0",
-        "openshiftVersion": "4.13.14"
+        "crcVersion": "2.23.0",
+        "openshiftVersion": "4.13.3"
     }
 }
+
