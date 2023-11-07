@@ -34,8 +34,7 @@ jobs:
             dlFileName_url=`echo ${new_url} | sed 's|${dlFileName}|checksums.txt|'`
             echo "${old_url}"
             echo "${new_url}"
-            echo "${new_url}.sha256"
-            wget -q "${dllFileName_url}"
+            echo "${dlFileName_url}"
             checksum=`curl -s -L ${new_url} | grep ${dlFileName_url} | sed 's|${dlFileName}||' | sed 's| ||g'`
             echo ".${checksum}."
             jq --indent 4 ".func.platform.${platform}.url = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform.${platform}.sha256sum = \"${checksum}\"" > src/tools.json.new
