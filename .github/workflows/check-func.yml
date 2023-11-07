@@ -36,7 +36,7 @@ jobs:
             echo "${new_url}"
             echo "${dlFileName}"
             echo "${dlFileName_url}"
-            checksum=`curl -s -L ${new_url} | grep ${dlFileName_url} | sed 's|${dlFileName}||' | sed 's| ||g'`
+            checksum=`curl -s -L ${new_url} | grep "${dlFileName_url}" | sed "s|${dlFileName}||" | sed "s| ||g"`
             echo ".${checksum}."
             jq --indent 4 ".func.platform.${platform}.url = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform.${platform}.sha256sum = \"${checksum}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
