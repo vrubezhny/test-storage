@@ -16,7 +16,7 @@ jobs:
       - name: Get latest OC version
         run: |
           echo "REPO_OC_VERSION=$(cat src/tools.json | jq -r .oc.version)" >> $GITHUB_ENV
-          echo "LATEST_TOOL_URL=$(echo 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/release.txt')"" >> $GITHUB_ENV
+          echo "LATEST_TOOL_URL=$(echo 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/release.txt')" >> $GITHUB_ENV
           echo "LATEST_TOOL_RELEASE=$(curl -s -L ${LATEST_TOOL_URL} | grep 'Name:' | head -n 1 | sed 's|Name:||' | sed 's| ||g')" >> $GITHUB_ENV
       - name: Find existing PR for OC version
         run: |
