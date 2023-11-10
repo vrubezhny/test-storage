@@ -28,11 +28,17 @@ jobs:
           jq --indent 4 '.func.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.func.versionRange = "^${{ env.LATEST_TOOL_RELEASE }}"' | jq --indent 4 '.func.versionRangeLabel = "version >= ${{ env.LATEST_TOOL_RELEASE }}"' > src/tools.json.new
           mv src/tools.json.new src/tools.json
           for platform in "win32" "darwin" "darwin-arm64" "linux" "linux-arm64"; do
+            echo ".$platform."
             old_url=`jq -r .func.platform.${platform}.url src/tools.json`
+            echo "old_url: $old_url"
             dlFileName=`jq -r .func.platform.${platform}.dlFileName src/tools.json`
+            echo "dlFileName: $dlFileName"
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_FUNC_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
+            echo "new_url: $new_url"
             checksum_url=`echo ${new_url} | sed "s|${dlFileName}|checksums.txt|"`
+            echo "checksum_url: $checksum_url"
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
+            echo "checksum: $checksum"
             jq --indent 4 ".func.platform.${platform}.url = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform.${platform}.sha256sum = \"${checksum}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
           done
