@@ -20,7 +20,8 @@ jobs:
           echo "LATEST_TOOL_URL=$LATEST_TOOL_URL"
           LATEST_TOOL_RELEASE=`curl -s -L "${LATEST_TOOL_URL}" \
               | grep "Name:" | head -n 1 | sed "s|Name:||" | sed "s| ||g"`
-          echo "LATEST_TOOL_RELEASE=$LATEST_TOOL_RELEASE"      - name: Find existing PR for OC version
+          echo "LATEST_TOOL_RELEASE=$LATEST_TOOL_RELEASE"
+      - name: Find existing PR for OC version
         run: |
           echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update oc ${{env.LATEST_TOOL_RELEASE}} in:title" --json url | jq length) >> $GITHUB_ENV
       - name: Update src/tools.json with latest oc version
