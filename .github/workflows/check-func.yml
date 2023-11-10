@@ -33,7 +33,7 @@ jobs:
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_FUNC_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
             checksum_url=`echo ${new_url} | sed "s|${dlFileName}|checksums.txt|"`
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
-            jq --indent 4 ".func.platform[\"${platform}\"].url" = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform[\"${platform}\"].sha256sum" = \"${checksum}\"" > src/tools.json.new
+            jq --indent 4 ".func.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform[\"${platform}\"].sha256sum = \"${checksum}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
           done
       - name: Create pull request
