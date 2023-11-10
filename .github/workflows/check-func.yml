@@ -27,7 +27,7 @@ jobs:
         run: |
           jq --indent 4 '.func.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.func.versionRange = "^${{ env.LATEST_TOOL_RELEASE }}"' | jq --indent 4 '.func.versionRangeLabel = "version >= ${{ env.LATEST_TOOL_RELEASE }}"' > src/tools.json.new
           mv src/tools.json.new src/tools.json
-          for platform in 'win32' 'darwin' 'darwin-arm64' 'linux' 'linux-arm64'; do
+          for platform in "win32" "darwin" "darwin-arm64" "linux" "linux-arm64"; do
             old_url=`jq -r .func.platform.${platform}.url src/tools.json`
             dlFileName=`jq -r .func.platform.${platform}.dlFileName src/tools.json`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_FUNC_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
