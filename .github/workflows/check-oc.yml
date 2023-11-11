@@ -38,7 +38,9 @@ jobs:
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
             echo "checksum_url: ${checksum_url}"
             echo "checksum: ${checksum}"
-            jq --indent 4 ".oc.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json | jq --indent 4 ".oc.platform[\"${platform}\"].sha256sum = \"${checksum}\"" > src/tools.json.new
+            jq --indent 4 ".oc.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
+             | jq --indent 4 ".oc.platform[\"${platform}\"].sha256sum = \"${checksum}\"" \
+             | jq --indent 4 ".oc.platform[\"${platform}\"].dlFileName = \"${dlFileName}\"" > src/tools.json.new \
             mv src/tools.json.new src/tools.json
           done
       - name: Create pull request
