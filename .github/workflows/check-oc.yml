@@ -26,7 +26,7 @@ jobs:
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_OC_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
           jq --indent 4 '.oc.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.oc.versionRange = "^${{ env.LATEST_TOOL_RELEASE }}"' | jq --indent 4 '.oc.versionRangeLabel = "version >= ${{ env.LATEST_TOOL_RELEASE }} and < 5.0.0"' > src/tools.json.new
-          # mv src/tools.json.new src/tools.json
+          mv src/tools.json.new src/tools.json
           for platform in win32 darwin linux; do
             old_url=`jq -r ".oc.platform[\"${platform}\"].url" src/tools.json`
             dlFileName=`jq -r ".oc.platform[\"${platform}\"].dlFileName" src/tools.json | sed "s|${REPO_OC_VERSION}|${LATEST_TOOL_RELEASE}|g"`
@@ -35,10 +35,9 @@ jobs:
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
             jq --indent 4 ".oc.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
              | jq --indent 4 ".oc.platform[\"${platform}\"].sha256sum = \"${checksum}\"" \
-             | jq --indent 4 ".oc.platform[\"${platform}\"].dlFileName = \"${dlFileName}\"" >> src/tools.json.new
-            # mv src/tools.json.new src/tools.json
+             | jq --indent 4 ".oc.platform[\"${platform}\"].dlFileName = \"${dlFileName}\"" > src/tools.json.new
+            mv src/tools.json.new src/tools.json
           done
-          mv src/tools.json.new src/tools.json
       - name: Create pull request
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_OC_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
