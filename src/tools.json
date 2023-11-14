@@ -40,22 +40,32 @@
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.9.5/openshift-client-windows-4.9.5.zip",
-                "sha256sum": "94c56134e8effb56df96823364f39e27eeb4e77c30a3e3d5070597df2220058e",
+                "url": "https://get.helm.sh/helm-v3.13.2-windows-amd64.zip",
+                "sha256sum": "",
                 "dlFileName": "openshift-client-windows-4.9.5.zip",
                 "cmdFileName": "oc.exe"
             },
             "darwin": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.9.5/openshift-client-mac-4.9.5.tar.gz",
-                "sha256sum": "fc05880dbe9132d9daf898b37766e27d0f03f881086a71a99e06de77cf654a0e",
+                "url": "https://get.helm.sh/helm-v3.13.2-darwin-amd64.tar.gz",
+                "sha256sum": "",
                 "dlFileName": "openshift-client-mac-4.9.5.tar.gz",
                 "cmdFileName": "oc"
             },
             "linux": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.9.5/openshift-client-linux-4.9.5.tar.gz",
-                "sha256sum": "447c40582fb2fc80b38be070c1f7e3989f08e53b38aa296595f5e3b63790a69a",
+                "url": "https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz",
+                "sha256sum": "",
                 "dlFileName": "openshift-client-linux-4.9.5.tar.gz",
                 "cmdFileName": "oc"
+            },
+            "darwin-arm64": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
+            },
+            "linux-arm64": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
             }
         }
     },
@@ -106,9 +116,9 @@
         "description": "oc helm CLI",
         "vendor": "Red Hat, Inc.",
         "name": "helm",
-        "version": "3.11.1",
-        "versionRange": "^3.11.1",
-        "versionRangeLabel": "version >= 3.11.1",
+        "version": "3.13.2",
+        "versionRange": "^3.13.2",
+        "versionRangeLabel": "version >= 3.13.2",
         "dlFileName": "helm",
         "filePrefix": "",
         "platform": {
