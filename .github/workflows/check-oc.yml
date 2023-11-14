@@ -29,7 +29,7 @@ jobs:
           mv src/tools.json.new src/tools.json
           for platform in win32 darwin linux; do
             old_url=`jq -r ".oc.platform[\"${platform}\"].url" src/tools.json`
-            dlFileName=`jq -r ".oc.platform[\"${platform}\"].dlFileName" src/tools.json | sed "s|${REPO_OC_VERSION}|${LATEST_TOOL_RELEASE}|g"`
+            dlFileName=`jq -r ".oc.platform[\"${platform}\"].dlFileName" src/tools.json | sed "s|${{ env.REPO_OC_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|g"`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_OC_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|g"`
             checksum_url=`echo "${new_url}" | sed "s|${dlFileName}|sha256sum.txt|"`
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`

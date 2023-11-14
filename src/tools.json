@@ -115,7 +115,7 @@
             "win32": {
                 "url": "https://get.helm.sh/helm-v3.11.1-windows-amd64.zip",
                 "sha256sum": "2ee9c0bec16252171aec7bb709219e069d4d747c5e40341d652708fa2a78640c",
-                "dlFileName": "helm-v3.11.1-windows-amd64.exe.zip",
+                "dlFileName": "helm-v3.11.1-windows-amd64.zip",
                 "cmdFileName": "windows-amd64/helm.exe"
             },
             "darwin": {
