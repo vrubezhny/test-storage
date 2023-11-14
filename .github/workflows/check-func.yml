@@ -26,7 +26,7 @@ jobs:
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_FUNC_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
           jq --indent 4 '.func.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.func.versionRange = "^${{ env.LATEST_TOOL_RELEASE }}"' | jq --indent 4 '.func.versionRangeLabel = "version >= ${{ env.LATEST_TOOL_RELEASE }}"' > src/tools.json.new
-          mv src/tools.json.new src/tools.json
+#          mv src/tools.json.new src/tools.json
           for platform in win32 darwin darwin-arm64 linux linux-arm64; do
             old_url=`jq -r ".func.platform[\"${platform}\"].url" src/tools.json`
             dlFileName=`jq -r ".func.platform[\"${platform}\"].dlFileName" src/tools.json`
