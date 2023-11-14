@@ -39,7 +39,7 @@ jobs:
             # mv src/tools.json.new src/tools.json
           done
           mv src/tools.json.new src/tools.json
-        - name: Create pull request
+      - name: Create pull request
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_OC_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
           release_url=`echo "${{ env.LATEST_TOOL_URL }}" | sed "s|stable|${{ env.LATEST_TOOL_RELEASE }}|"`

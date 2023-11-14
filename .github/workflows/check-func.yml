@@ -37,7 +37,7 @@ jobs:
             # mv src/tools.json.new src/tools.json
           done
           mv src/tools.json.new src/tools.json
-        - name: Create pull request
+      - name: Create pull request
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_FUNC_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
           git config --global user.email "openshifttools-bot@users.noreply.github.com"
