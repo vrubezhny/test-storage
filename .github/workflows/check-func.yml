@@ -34,7 +34,6 @@ jobs:
             checksum_url=`echo ${new_url} | sed "s|${dlFileName}|checksums.txt|"`
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
             jq --indent 4 ".func.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json | jq --indent 4 ".func.platform[\"${platform}\"].sha256sum = \"${checksum}\"" >> src/tools.json.new
-            # mv src/tools.json.new src/tools.json
           done
           mv src/tools.json.new src/tools.json
       - name: Create pull request
