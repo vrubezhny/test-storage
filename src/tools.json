@@ -106,29 +106,37 @@
         "description": "oc helm CLI",
         "vendor": "Red Hat, Inc.",
         "name": "helm",
-        "version": "3.11.1",
-        "versionRange": "^3.11.1",
-        "versionRangeLabel": "version >= 3.11.1",
+        "version": "3.13.2",
+        "versionRange": "^3.13.2",
+        "versionRangeLabel": "version >= 3.13.2",
         "dlFileName": "helm",
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://get.helm.sh/helm-v3.11.1-windows-amd64.zip",
-                "sha256sum": "2ee9c0bec16252171aec7bb709219e069d4d747c5e40341d652708fa2a78640c",
+                "url": "https://get.helm.sh/helm-v3.13.2-windows-amd64.zip",
+                "sha256sum": "",
                 "dlFileName": "helm-v3.11.1-windows-amd64.exe.zip",
                 "cmdFileName": "windows-amd64/helm.exe"
             },
             "darwin": {
-                "url": "https://get.helm.sh/helm-v3.11.1-darwin-amd64.tar.gz",
-                "sha256sum": "0930908a9a43a32c9a7dc859bc82b2d0d822d99b53d75979a6da64a824d80837",
+                "url": "https://get.helm.sh/helm-v3.13.2-darwin-amd64.tar.gz",
+                "sha256sum": "",
                 "dlFileName": "helm-v3.11.1-darwin-amd64.tar.gz",
                 "cmdFileName": "darwin-amd64/helm"
             },
             "linux": {
-                "url": "https://get.helm.sh/helm-v3.11.1-linux-amd64.tar.gz",
-                "sha256sum": "55a8ac91018650964ccaccc66a6d6b963428a2afa0a824e708e63509dbbd3316",
+                "url": "https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz",
+                "sha256sum": "",
                 "dlFileName": "helm-v3.11.1-linux-amd64.tar.gz",
                 "cmdFileName": "linux-amd64/helm"
+            },
+            "darwin-arm64": {
+                "url": "null",
+                "sha256sum": ""
+            },
+            "linux-arm64": {
+                "url": "null",
+                "sha256sum": ""
             }
         }
     },
