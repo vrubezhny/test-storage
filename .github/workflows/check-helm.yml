@@ -33,7 +33,7 @@ jobs:
             old_url=`jq -r ".helm.platform[\"${platform}\"].url" src/tools.json`
             dlFileName=`jq -r ".helm.platform[\"${platform}\"].dlFileName" src/tools.json`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
-            checksum_url=`echo "${new_url}.sha256sum"`
+            checksum_url=`echo "${new_url}.sha256"`
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
             jq --indent 4 ".helm.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
               | jq --indent 4 ".helm.platform[\"${platform}\"].sha256sum = \"${checksum}\"" > src/tools.json.new
