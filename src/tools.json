@@ -51,10 +51,22 @@
                 "dlFileName": "openshift-client-mac-4.9.5.tar.gz",
                 "cmdFileName": "oc"
             },
+            "darwin-arm64": {
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.9.5/openshift-client-mac-arm64-4.9.5.tar.gz",
+                "sha256sum": "",
+                "dlFileName": "openshift-client-mac-arm64-4.9.5.tar.gz",
+                "cmdFileName": "oc"
+            },
             "linux": {
                 "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.9.5/openshift-client-linux-4.9.5.tar.gz",
                 "sha256sum": "447c40582fb2fc80b38be070c1f7e3989f08e53b38aa296595f5e3b63790a69a",
                 "dlFileName": "openshift-client-linux-4.9.5.tar.gz",
+                "cmdFileName": "oc"
+            },
+            "linux-arm64": {
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.9.5/openshift-client-linux-arm64-4.9.5.tar.gz",
+                "sha256sum": "",
+                "dlFileName": "openshift-client-linux-arm64-4.9.5.tar.gz",
                 "cmdFileName": "oc"
             }
         }
@@ -142,7 +154,6 @@
                 "dlFileName": "helm-v3.11.1-linux-arm64.tar.gz",
                 "cmdFileName": "linux-arm64/helm"
             }
-
         }
     },
     "crc": {
