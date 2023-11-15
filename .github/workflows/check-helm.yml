@@ -34,7 +34,7 @@ jobs:
             dlFileName=`jq -r ".helm.platform[\"${platform}\"].dlFileName" src/tools.json`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
             checksum_url=`echo "${new_url}.sha256"`
-            checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
+            checksum=`curl -s -L ${checksum_url} | sed "s| ||g"`
             jq --indent 4 ".helm.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
               | jq --indent 4 ".helm.platform[\"${platform}\"].sha256sum = \"${checksum}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
