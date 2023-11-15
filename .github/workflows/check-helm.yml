@@ -47,4 +47,4 @@ jobs:
           git checkout -b "helm-${{ env.LATEST_TOOL_RELEASE }}"
           git commit -am "Update helm to ${{ env.LATEST_TOOL_RELEASE }}"
           git push origin "helm-${{ env.LATEST_TOOL_RELEASE }}"
-          gh pr create --title "Update helm to ${{ env.LATEST_TOOL_RELEASE }}" --body "See ${{ env.LATEST_TOOL_URL }}"
+          gh pr create --title "Update helm to ${{ env.LATEST_TOOL_RELEASE }}" --body "See ${{ env.LATEST_TOOL_URL }}/${{ env.LATEST_TOOL_RELEASE }}"
