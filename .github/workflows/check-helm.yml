@@ -18,14 +18,12 @@ jobs:
           echo "REPO_HELM_VERSION=$(cat src/tools.json | jq -r .helm.version)" >> $GITHUB_ENV
           baseUrl="https://mirror.openshift.com/pub/openshift-v4/clients/helm"
           echo "LATEST_TOOL_URL=$(echo ${baseUrl})" >> $GITHUB_ENV
-          echo $LATEST_TOOL_URL
-          echo "LATEST_TOOL_RELEASE=$(curl -s -L ${baseUrl} | grep "${baseUrl}" | sed "s|${baseUrl}||" | grep -v "latest" | sed 's/[^"]*"\([^"]*\).*/\1/' | sed "s|/||g" | sort -V | tail -n 1)" >> $GITHUB_ENV
-          echo $LATEST_TOOL_RELEASE
+          echo "LATEST_TOOL_RELEASE=$(curl -s -L ${baseUrl}/1 | grep "${baseUrl}" | sed "s|${baseUrl}||" | grep -v "latest" | sed 's/[^"]*"\([^"]*\).*/\1/' | sed "s|/||g" | sort -V | tail -n 1)" >> $GITHUB_ENV
       - name: Find existing PR for HELM version
         run: |
           echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update helm ${{env.LATEST_TOOL_RELEASE}} in:title" --json url | jq length) >> $GITHUB_ENV
       - name: Update src/tools.json with latest helm version
-        if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_HELM_VERSION) && (env.PR_EXISTS == 0) }}
+        if: ${{ (env.LATEST_TOOL_RELEASE != "") && (env.LATEST_TOOL_RELEASE != env.REPO_HELM_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
           jq --indent 4 '.helm.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.helm.versionRange = "^${{ env.LATEST_TOOL_RELEASE }}"' | jq --indent 4 '.helm.versionRangeLabel = "version >= ${{ env.LATEST_TOOL_RELEASE }}"' > src/tools.json.new
           mv src/tools.json.new src/tools.json
@@ -40,7 +38,7 @@ jobs:
             mv src/tools.json.new src/tools.json
           done
       - name: Create pull request
-        if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_HELM_VERSION) && (env.PR_EXISTS == 0) }}
+        if: ${{ (env.LATEST_TOOL_RELEASE != "") && (env.LATEST_TOOL_RELEASE != env.REPO_HELM_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
           git config --global user.email "openshifttools-bot@users.noreply.github.com"
           git config --global user.name "openshifttools-bot"
