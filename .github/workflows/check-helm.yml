@@ -29,13 +29,13 @@ jobs:
           mv src/tools.json.new src/tools.json
           for platform in win32 darwin darwin-arm64 linux linux-arm64; do
             old_url=`jq -r ".helm.platform[\"${platform}\"].url" src/tools.json`
-            dlFileName=`jq -r ".oc.platform[\"${platform}\"].dlFileName" src/tools.json | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
+            dlFileName=`jq -r ".helm.platform[\"${platform}\"].dlFileName" src/tools.json | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
             checksum_url=`echo "${new_url}.sha256sum"`
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
-            jq --indent 4 ".oc.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
-              | jq --indent 4 ".oc.platform[\"${platform}\"].sha256sum = \"${checksum}\"" \
-              | jq --indent 4 ".oc.platform[\"${platform}\"].dlFileName = \"${dlFileName}\"" > src/tools.json.new
+            jq --indent 4 ".helm.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
+              | jq --indent 4 ".helm.platform[\"${platform}\"].sha256sum = \"${checksum}\"" \
+              | jq --indent 4 ".helm.platform[\"${platform}\"].dlFileName = \"${dlFileName}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
           done
       - name: Create pull request
