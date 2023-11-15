@@ -16,14 +16,11 @@ jobs:
       - name: Get latest HELM version
         run: |
           echo "REPO_HELM_VERSION=$(cat src/tools.json | jq -r .helm.version)" >> $GITHUB_ENV
-          LATEST_TOOL_RELEASE_RESP=$(gh release --repo ${{ env.TOOL_REPO }} view --json tagName,url)
-          baseUrl="https://mirror.openshift.com/pub/openshift-v4/clients/helm/||"
-
+          baseUrl="https://mirror.openshift.com/pub/openshift-v4/clients/helm"
           echo "LATEST_TOOL_URL=$(echo ${baseUrl})" >> $GITHUB_ENV
+          echo $LATEST_TOOL_URL
           echo "LATEST_TOOL_RELEASE=$(curl -s -L ${baseUrl} | grep "${baseUrl}" | sed "s|${baseUrl}||" | grep -v "latest" | sed 's/[^"]*"\([^"]*\).*/\1/' | sed "s|/||g" | sort -V | tail -n 1)" >> $GITHUB_ENV
-
-          # echo "LATEST_TOOL_RELEASE=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .tagName | sed 's|v||')" >> $GITHUB_ENV
-          #echo "LATEST_TOOL_URL=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .url)" >> $GITHUB_ENV
+          echo $LATEST_TOOL_RELEASE
       - name: Find existing PR for HELM version
         run: |
           echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update helm ${{env.LATEST_TOOL_RELEASE}} in:title" --json url | jq length) >> $GITHUB_ENV
