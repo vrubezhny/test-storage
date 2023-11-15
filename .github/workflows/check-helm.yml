@@ -17,8 +17,13 @@ jobs:
         run: |
           echo "REPO_HELM_VERSION=$(cat src/tools.json | jq -r .helm.version)" >> $GITHUB_ENV
           LATEST_TOOL_RELEASE_RESP=$(gh release --repo ${{ env.TOOL_REPO }} view --json tagName,url)
-          echo "LATEST_TOOL_RELEASE=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .tagName | sed 's|v||')" >> $GITHUB_ENV
-          echo "LATEST_TOOL_URL=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .url)" >> $GITHUB_ENV
+          baseUrl="https://mirror.openshift.com/pub/openshift-v4/clients/helm/||"
+
+          echo "LATEST_TOOL_URL=$(echo ${baseUrl})" >> $GITHUB_ENV
+          echo "LATEST_TOOL_RELEASE=$(curl -s -L ${baseUrl} | grep "${baseUrl}" | sed "s|${baseUrl}||" | grep -v "latest" | sed 's/[^"]*"\([^"]*\).*/\1/' | sed "s|/||g" | sort -V | tail -n 1)" >> $GITHUB_ENV
+
+          # echo "LATEST_TOOL_RELEASE=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .tagName | sed 's|v||')" >> $GITHUB_ENV
+          #echo "LATEST_TOOL_URL=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .url)" >> $GITHUB_ENV
       - name: Find existing PR for HELM version
         run: |
           echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update helm ${{env.LATEST_TOOL_RELEASE}} in:title" --json url | jq length) >> $GITHUB_ENV
@@ -29,13 +34,12 @@ jobs:
           mv src/tools.json.new src/tools.json
           for platform in win32 darwin darwin-arm64 linux linux-arm64; do
             old_url=`jq -r ".helm.platform[\"${platform}\"].url" src/tools.json`
-            dlFileName=`jq -r ".helm.platform[\"${platform}\"].dlFileName" src/tools.json | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
+            dlFileName=`jq -r ".helm.platform[\"${platform}\"].dlFileName" src/tools.json`
             new_url=`echo ${old_url} | sed "s|${{ env.REPO_HELM_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
             checksum_url=`echo "${new_url}.sha256sum"`
             checksum=`curl -s -L ${checksum_url} | grep "${dlFileName}" | sed "s|${dlFileName}||" | sed "s| ||g"`
             jq --indent 4 ".helm.platform[\"${platform}\"].url = \"${new_url}\"" src/tools.json \
-              | jq --indent 4 ".helm.platform[\"${platform}\"].sha256sum = \"${checksum}\"" \
-              | jq --indent 4 ".helm.platform[\"${platform}\"].dlFileName = \"${dlFileName}\"" > src/tools.json.new
+              | jq --indent 4 ".helm.platform[\"${platform}\"].sha256sum = \"${checksum}\"" > src/tools.json.new
             mv src/tools.json.new src/tools.json
           done
       - name: Create pull request

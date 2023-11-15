@@ -125,34 +125,34 @@
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://get.helm.sh/helm-v3.11.1-windows-amd64.zip",
-                "sha256sum": "bc37d5d283e57c5dfa94f92ff704c8e273599ff8df3f8132cef5ca73f6a23d0a",
-                "dlFileName": "helm-v3.11.1-windows-amd64.zip",
-                "cmdFileName": "windows-amd64/helm.exe"
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/helm/3.11.1/helm-windows-amd64.exe.zip",
+                "sha256sum": "2ee9c0bec16252171aec7bb709219e069d4d747c5e40341d652708fa2a78640c",
+                "dlFileName": "helm-windows-amd64.exe.zip",
+                "cmdFileName": "helm-windows-amd64.exe"
             },
             "darwin": {
-                "url": "https://get.helm.sh/helm-v3.11.1-darwin-amd64.tar.gz",
-                "sha256sum": "2548a90e5cc957ccc5016b47060665a9d2cd4d5b4d61dcc32f5de3144d103826",
-                "dlFileName": "helm-v3.11.1-darwin-amd64.tar.gz",
-                "cmdFileName": "darwin-amd64/helm"
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/helm/3.11.1/helm-darwin-amd64.tar.gz",
+                "sha256sum": "0930908a9a43a32c9a7dc859bc82b2d0d822d99b53d75979a6da64a824d80837",
+                "dlFileName": "helm-darwin-amd64.tar.gz",
+                "cmdFileName": "helm-darwin-amd64"
             },
             "darwin-arm64": {
-                "url": "https://get.helm.sh/helm-v3.11.1-darwin-arm64.tar.gz",
-                "sha256sum": "43d0198a7a2ea2639caafa81bb0596c97bee2d4e40df50b36202343eb4d5c46b",
-                "dlFileName": "helm-v3.11.1-darwin-arm64.tar.gz",
-                "cmdFileName": "darwin-arm64/helm"
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/helm/3.11.1/helm-darwin-arm64.tar.gz",
+                "sha256sum": "7edbba9ab680eaf6ce4b02693909c944dcde2ac60d22b26363852fee736579ef",
+                "dlFileName": "helm-darwin-arm64.tar.gz",
+                "cmdFileName": "helm-darwin-arm64"
             },
             "linux": {
-                "url": "https://get.helm.sh/helm-v3.11.1-linux-amd64.tar.gz",
-                "sha256sum": "0b1be96b66fab4770526f136f5f1a385a47c41923d33aab0dcb500e0f6c1bf7c",
-                "dlFileName": "helm-v3.11.1-linux-amd64.tar.gz",
-                "cmdFileName": "linux-amd64/helm"
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/helm/3.11.1/helm-linux-amd64.tar.gz",
+                "sha256sum": "55a8ac91018650964ccaccc66a6d6b963428a2afa0a824e708e63509dbbd3316",
+                "dlFileName": "helm-linux-amd64.tar.gz",
+                "cmdFileName": "helm-linux-amd64"
             },
             "linux-arm64": {
-                "url": "https://get.helm.sh/helm-v3.11.1-linux-arm64.tar.gz",
-                "sha256sum": "919173e8fb7a3b54d76af9feb92e49e86d5a80c5185020bae8c393fa0f0de1e8",
-                "dlFileName": "helm-v3.11.1-linux-arm64.tar.gz",
-                "cmdFileName": "linux-arm64/helm"
+                "url": "https://developers.redhat.com/content-gateway/rest/mirror2/pub/openshift-v4/clients/helm/3.11.1/helm-linux-arm64.tar.gz",
+                "sha256sum": "b84fb1eca6e1c8f77a047d2731157a5da8c92bf402fb4d4a76ff7bbeb6175e31",
+                "dlFileName": "helm-linux-arm64.tar.gz",
+                "cmdFileName": "helm-linux-amd64"
             }
         }
     },
