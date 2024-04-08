@@ -20,11 +20,6 @@ jobs:
           echo "TAG_VERSION='2.2.2'" >> $GITHUB_ENV
           echo "PACKAGE_VERSION=2.2.3" >> $GITHUB_ENV
           
-      - name: Convert Versions to Numbers
-        run: |
-          echo "TAG_NUMBER=$echo$((${{env.TAG_VERSION}} - 0 ))" >> $GITHUB_ENV
-          echo "PACKAGE_NUMBER=$echo$((${{env.PACKAGE_VERSION}} - 0 ))" >> $GITHUB_ENV
-    
       - name: Compare Versions
         run: |
           vercomp () {
