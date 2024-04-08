@@ -1,0 +1,41 @@
+name: check-versions
+on:
+  push:
+    branches: 
+      - 'master'
+  pull_request:
+    branches: 
+     - 'master'
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    env:
+        TOOL_REPO: openshift/oc
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Clean Versions
+        run: |
+          # echo "TAG_VERSION=$(echo ${{env.TAG}} | tr -dc '0-9')" >> $GITHUB_ENV
+          # echo "PACKAGE_VERSION=$(echo ${{env.PACKAGE}} | tr -dc '0-9')" >> $GITHUB_ENV
+          echo "TAG_VERSION='2.2.2'" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=2.2.3" >> $GITHUB_ENV
+          
+      - name: Convert Versions to Numbers
+        run: |
+          echo "TAG_NUMBER=$echo$((${{env.TAG_VERSION}} - 0 ))" >> $GITHUB_ENV
+          echo "PACKAGE_NUMBER=$echo$((${{env.PACKAGE_VERSION}} - 0 ))" >> $GITHUB_ENV
+    
+      - name: Compare Versions
+        run: |
+          if (( ${{env.PACKAGE_NUMBER}} > ${{env.TAG_NUMBER}} )); then
+              echo "PUSH=true" >> "$GITHUB_ENV"
+    
+          elif (( ${{env.PACKAGE_NUMBER}} = ${{env.TAG_NUMBER}} )); then
+              echo "PUSH=false" >> "$GITHUB_ENV"
+    
+          else
+              echo "PUSH=false" >> "$GITHUB_ENV"
+          fi         
+
+
+        
