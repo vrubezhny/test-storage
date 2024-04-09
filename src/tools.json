@@ -77,7 +77,7 @@
         "name": "kubectl",
         "cmdFileName": "kubectl",
         "version": "4.15.0",
-        "versionRange": "^4.15.0",
+        "versionRange": "*",
         "versionRangeLabel": "version >= 4.15.0 and < 5.0.0",
         "filePrefix": "",
         "platform": {
