@@ -1,4 +1,4 @@
-name: check-oc
+name: check-oc-kubectl
 
 on:
   schedule:
@@ -13,15 +13,15 @@ jobs:
     steps:
       - name: Check Out Code
         uses: actions/checkout@v4
-      - name: Get latest OC version
+      - name: Get latest oc and kubectl package version
         run: |
           echo "REPO_TOOL_VERSION=$(cat src/tools.json | jq -r .oc.version)" >> $GITHUB_ENV
           LATEST_TOOL_URL='https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/release.txt'
           echo "LATEST_TOOL_URL=$(echo ${LATEST_TOOL_URL})" >> $GITHUB_ENV
           echo "LATEST_TOOL_RELEASE=$(curl -s -L ${LATEST_TOOL_URL} | grep "Name:" | head -n 1 | sed 's|Name:||' | sed 's| ||g')" >> $GITHUB_ENV
-      - name: Find existing PR for OC version
+      - name: Find existing PR for oc and kubectl package version
         run: |
-          echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update oc ${{env.LATEST_TOOL_RELEASE}} in:title" --json url | jq length) >> $GITHUB_ENV
+          echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update oc and kubectl cli to ${{env.LATEST_TOOL_RELEASE}} in:title" --json url | jq length) >> $GITHUB_ENV
       - name: Update src/tools.json with latest oc version
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_TOOL_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
@@ -61,6 +61,6 @@ jobs:
           git config --global user.email "openshifttools-bot@users.noreply.github.com"
           git config --global user.name "openshifttools-bot"
           git checkout -b "oc-${{ env.LATEST_TOOL_RELEASE }}"
-          git commit -am "Update oc to ${{ env.LATEST_TOOL_RELEASE }}"
+          git commit -am "Update oc and kubectl CLI to ${{ env.LATEST_TOOL_RELEASE }}"
           git push origin "oc-${{ env.LATEST_TOOL_RELEASE }}"
-          gh pr create --title "Update oc to ${{ env.LATEST_TOOL_RELEASE }}" --body "See ${release_url}"
+          gh pr create --title "Update oc and kubectl CLI to ${{ env.LATEST_TOOL_RELEASE }}" --body "See ${release_url}"
