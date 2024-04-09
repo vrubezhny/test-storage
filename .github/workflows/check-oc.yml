@@ -41,7 +41,7 @@ jobs:
       - name: Update src/tools.json with latest kubectl version
         if: ${{ (env.LATEST_TOOL_RELEASE != env.REPO_TOOL_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
-          jq --indent 4 '.kubectl.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.kubectl.versionRange = "^${{ env.LATEST_TOOL_RELEASE }}"' | jq --indent 4 '.kubectl.versionRangeLabel = "version >= ${{ env.LATEST_TOOL_RELEASE }} and < 5.0.0"' > src/tools.json.new
+          jq --indent 4 '.kubectl.version = "${{ env.LATEST_TOOL_RELEASE }}"' src/tools.json | jq --indent 4 '.kubectl.versionRange = "*"' | jq --indent 4 '.kubectl.versionRangeLabel = "*"' > src/tools.json.new
           mv src/tools.json.new src/tools.json
           for platform in win32 darwin darwin-arm64 linux linux-arm64; do
             old_url=`jq -r ".kubectl.platform[\"${platform}\"].url" src/tools.json`
