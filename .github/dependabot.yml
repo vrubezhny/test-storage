@@ -39,18 +39,35 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    typescript-eslint:
+      patterns:
+      - "@vue/*"
 - package-ecosystem: npm
   directory: "/angular-app"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    typescript-eslint:
+      patterns:
+      - "@angular/*"
 - package-ecosystem: npm
   directory: "/eslint"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    typescript-eslint:
+      patterns:
+      - "@typescript-eslint/*"
 - package-ecosystem: npm
   directory: "/vue-app"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    typescript-eslint:
+      patterns:
+      - "@babel/*"
+      - "@vue/*"
