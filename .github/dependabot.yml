@@ -62,6 +62,7 @@ updates:
     typescript-eslint:
       patterns:
       - "@typescript-eslint/*"
+      - "eslint"
 - package-ecosystem: npm
   directory: "/vue-app"
   schedule:
