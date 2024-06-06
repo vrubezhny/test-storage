@@ -52,7 +52,7 @@ updates:
     angular:
       patterns:
       - "@angular/*"
-      - "@angular-devkit/"
+      - "@angular-devkit/*"
 - package-ecosystem: npm
   directory: "/eslint"
   schedule:
