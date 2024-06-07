@@ -1,0 +1,58 @@
+name: check-odo
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+jobs:
+  check-odo-repo:
+    runs-on: ubuntu-latest
+    env:
+        TOOL_REPO: redhat-developer/odo
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v4
+      - name: Get latest ODO nightly build version
+        run: |
+          echo "REPO_ODO_VERSION=$(cat src/tools.json | jq -r .odo.version)" >> $GITHUB_ENV
+          commitId="$(git ls-remote --refs --heads https://github.com/${{ env.TOOL_REPO }} refs/heads/main 2>/dev/null | cut -c1-9 2>/dev/null)"
+          echo "LATEST_TOOL_COMMIT_ID="${commitId}" >> $GITHUB_ENV
+          echo "LATEST_TOOL_NIGHTLY_BUILD="${commitId}-nightly" >> $GITHUB_ENV
+          # LATEST_TOOL_RELEASE_RESP=$(gh release --repo ${{ env.TOOL_REPO }} view --json tagName,url)
+          # echo "LATEST_TOOL_NIGHTLY_BUILD=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .tagName | sed 's|v||')" >> $GITHUB_ENV
+          # echo "LATEST_TOOL_URL=$(echo ${LATEST_TOOL_RELEASE_RESP} | jq -r .url)" >> $GITHUB_ENV
+      - name: Find existing PR for ODO version
+        run: |
+          echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state all --search "update odo CLI to ${{env.LATEST_TOOL_NIGHTLY_BUILD}} in:title" --json url | jq length) >> $GITHUB_ENV
+      - name: Update src/tools.json with latest odo version
+        if: ${{ (env.LATEST_TOOL_NIGHTLY_BUILD != '') && (env.LATEST_TOOL_NIGHTLY_BUILD != env.REPO_ODO_VERSION) && (env.PR_EXISTS == 0) }}
+        run: |
+          jq --indent 4 '.odo.version = "${{ env.LATEST_TOOL_NIGHTLY_BUILD }}"' src/tools.json | jq --indent 4 '.odo.versionRange = "${{ env.LATEST_TOOL_NIGHTLY_BUILD }}"' | jq --indent 4 '.odo.versionRangeLabel = "version == ${{ env.LATEST_TOOL_NIGHTLY_BUILD }}"' > src/tools.json.new
+          mv src/tools.json.new src/tools.json
+          for platform in win32 darwin darwin-arm64 linux linux-arm64; do
+            ext=".tar.gz"
+            if [[ "$platform" == "win"* ]]; then
+              ext=".zip"
+            fi
+            arch="-amd64"
+            if [[ $platform == *"-a"* ]]; then
+              arch="" # already in platform string
+            fi
+            old_url=`jq -r .odo.platform.${platform}.url src/tools.json`
+            # https://s3.eu-de.cloud-object-storage.appdomain.cloud/odo-nightly-builds/odo-linux-amd64.tar.gz
+            # new_url=`echo ${old_url} | sed "s|${{ env.REPO_ODO_VERSION }}|${{ env.LATEST_TOOL_RELEASE }}|"`
+            new_url="https://s3.eu-de.cloud-object-storage.appdomain.cloud/odo-nightly-builds/odo-${platform}${arch}${ext}"
+            checksum=`curl -s ${new_url}.sha256`
+            jq --indent 4 ".odo.platform.${platform}.url = \"${new_url}\"" src/tools.json | jq --indent 4 ".odo.platform.${platform}.sha256sum = \"${checksum}\"" > src/tools.json.new
+            mv src/tools.json.new src/tools.json
+          done
+      - name: Create pull request
+        if: ${{ (env.LATEST_TOOL_NIGHTLY_BUILD != '') && (env.LATEST_TOOL_NIGHTLY_BUILD != env.REPO_ODO_VERSION) && (env.PR_EXISTS == 0) }}
+        run: |
+          git config --global user.email "openshifttools-bot@users.noreply.github.com"
+          git config --global user.name "openshifttools-bot"
+          git checkout -b "odo-${{ env.LATEST_TOOL_NIGHTLY_BUILD }}"
+          git commit -am "Update ODO CLI to ${{ env.LATEST_TOOL_NIGHTLY_BUILD }}"
+          git push origin "odo-${{ env.LATEST_TOOL_NIGHTLY_BUILD }}"
+          gh pr create --title "Update ODO CLI to ${{ env.LATEST_TOOL_NIGHTLY_BUILD }}" --body "See commits hystory at https://github.com/redhat-developer/odo/commits/${{ env.LATEST_TOOL_COMMIT_ID }}"
