@@ -1,10 +1,10 @@
 name: check-versions
 on:
   push:
-    branches: 
+    branches:
       - 'master'
   pull_request:
-    branches: 
+    branches:
      - 'master'
 jobs:
   check-versions:
@@ -19,7 +19,7 @@ jobs:
           # echo "PACKAGE_VERSION=$(echo ${{env.PACKAGE}} | tr -dc '0-9')" >> $GITHUB_ENV
           echo "TAG_VERSION='2.2.2'" >> $GITHUB_ENV
           echo "PACKAGE_VERSION=2.2.3" >> $GITHUB_ENV
-          
+
       - name: Compare Versions
         run: |
           vercomp () {
@@ -30,11 +30,11 @@ jobs:
             local IFS=.
             local i ver1=($1) ver2=($2)
             # fill empty fields in ver1 with zeros
-            for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+            for ((i=${#ver1[@]}; i<${#ver2[@]}; i++));
             do
               ver1[i]=0
             done
-            for ((i=0; i<${#ver1[@]}; i++))
+            for ((i=0; i<${#ver1[@]}; i++));
             do
               if [[ -z ${ver2[i]} ]]
               then
@@ -61,10 +61,10 @@ jobs:
 
           # elif (( ${{env.PACKAGE_NUMBER}} = ${{env.TAG_NUMBER}} )); then
           #    echo "PUSH=false; '${{env.TAG_VERSION}} $op ${{env.PACKAGE_VERSION}}'" >> "$GITHUB_ENV"
-    
+
           # else
           #    echo "PUSH=false" >> "$GITHUB_ENV"
-          #fi         
+          #fi
 
 
-        
+
