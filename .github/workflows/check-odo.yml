@@ -5,6 +5,52 @@ on:
     - cron: "0 8 * * *"
   workflow_dispatch:
 jobs:
+  should-check-odo:
+    runs-on: ubuntu-latest
+    outputs:
+        repo-cache-hit: ${{ steps.cache-last-commit.outputs.cache-hit }}
+        repo-last-commit-id: ${{ steps.last-commit-info.outputs.last-commit-id }}
+        repo-last-commit-date: ${{ steps.last-commit-info.outputs.last-commit-date }}
+        repo-last-commit-built-number: ${{ steps.last-commit-info.outputs.last-commit-build-number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'redhat-developer/odo'
+          fetch-depth: 2
+          path: redhat-developer-odo-repository
+      - name: Get Last Commit Info
+        id: repo-last-commit-info
+        run: |
+          # version="$(git describe --no-match --always --abbrev=9 --dirty --broken 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)-nightly"
+          # Last Commit ID
+          lastCommitId="$(git rev-parse HEAD 2>/dev/null)"
+          # Last Commit Committer Date/Time
+          lastCommitDate="$(git log -1 --oneline --pretty=format:%cd --date=format:%Y%m%d%H%M%S ${lastCommitId} 2>/dev/null)"
+          # Number of commits between the latest release and the Last Commit ID
+          lastCommitBuildNumber="$(git log --oneline 3248bd4..5b5eb35 2>/dev/null | wc -l)"
+          repo-last-commit-id: ${{ steps.last-commit-info.outputs.last-commit-id }}
+          repo-last-commit-date: ${{ steps.last-commit-info.outputs.last-commit-date }}
+          repo-last-commit-built-number: ${{ steps.last-commit-info.outputs.last-commit-build-number }}
+          echo "repo-last-commit-id=$(echo $lastCommitId)" >> $GITHUB_OUTPUT
+          echo "repo-last-commit-date=$(echo $lastCommitDate)" >> $GITHUB_OUTPUT
+          echo "repo-last-commit-built-number=$(echo $lastCommitBuildNumber)" >> $GITHUB_OUTPUT
+          echo "$lastCommitId" >> ../lastCommit
+      - name: Check New Changes
+        id: cache-last-commit
+        uses: actions/cache@v4
+        with:
+          path: lastCommit
+          key: lastCommit-${{ hashFiles('lastCommit') }}
+  should-update-odo:
+    runs-on: ubuntu-latest
+    needs: should-check-odo
+    if: ${{ needs.should-check-odo.outputs.repo-cache-hit != 'true' || github.event_name != 'schedule' }}
+    outputs:
+      odo-version-changed: ${{ !(steps.cache-last-commit.outputs.cache-hit) }}
+    steps:
+      - name: Test Should Update Odo?
+        run: |
+          echo "should-update-odo: executed!"
   check-odo-repo:
     runs-on: ubuntu-latest
     env:
@@ -25,7 +71,7 @@ jobs:
       - name: Find existing PR for ODO version
         run: |
           echo "LATEST_TOOL_RELEASE_VERSION_STRING=${{ env.LATEST_TOOL_RELEASE_VERSION }} (${{ env.LATEST_TOOL_NIGHTLY_BUILD }})" >> $GITHUB_ENV
-          echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state open --search "update odo cli to ${{ env.LATEST_TOOL_RELEASE_VERSION }} (${{ env.LATEST_TOOL_NIGHTLY_BUILD }}) in:title" --json url | jq length) >> $GITHUB_ENV
+          echo PR_EXISTS=$(gh pr --repo ${{ github.repository }} list --state any --search "update odo cli to ${{ env.LATEST_TOOL_RELEASE_VERSION }} (${{ env.LATEST_TOOL_NIGHTLY_BUILD }}) in:title" --json url | jq length) >> $GITHUB_ENV
       - name: Update src/tools.json with latest odo version
         if: ${{ (env.LATEST_TOOL_NIGHTLY_BUILD != '') && (env.LATEST_TOOL_RELEASE_VERSION_STRING != env.REPO_ODO_VERSION) && (env.PR_EXISTS == 0) }}
         run: |
