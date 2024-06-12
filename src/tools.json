@@ -127,8 +127,8 @@
         }
     },
     "helm": {
-        "description": "oc helm CLI",
-        "vendor": "Red Hat, Inc.",
+        "description": "Helm CLI tool",
+        "vendor": "The Helm Project",
         "name": "helm",
         "version": "3.13.2",
         "versionRange": "^3.13.2",
