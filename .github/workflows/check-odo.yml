@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: '${{ env.TOOL_REPO}}'
+          repository: '${{ env.TOOL_REPO }}'
           fetch-depth: 2
           fetch-tags: false
           path: redhat-developer-odo-repository
@@ -47,7 +47,7 @@ jobs:
     outputs:
       pr-exists: ${{ steps.check-pr-exists.outputs.pr-exists }}
     needs: check-odo
-    if: ${{ needs.check-odo.outputs.last-commit-id != '' || github.event_name != 'schedule' }}
+    if: ${{ needs.check-odo.outputs.last-commit-id != '' }}
     steps:
       - name: Check if the update PR already exists
         id: check-pr-exists
@@ -59,7 +59,7 @@ jobs:
     outputs:
       nightly-build-exists: ${{ steps.check-nightly-build-exists.outputs.nightly-build-exists }}
     needs: [check-odo, check-pr]
-    if: ${{ needs.check-pr.outputs.pr-exists == 0 || github.event_name != 'schedule' }}
+    if: ${{ needs.check-odo.outputs.last-commit-id != '' && needs.check-pr.outputs.pr-exists == 0 }}
     steps:
       - name: Check if a Nightly Build exists for the last commit id
         id: check-nightly-build-exists
