@@ -75,3 +75,13 @@ updates:
     vue:
       patterns:
       - "@vue/*"
+- package-ecosystem: npm
+  directory: "/vost"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  groups:
+    survey:
+      patterns:
+      - "survey-core"
+      - "survey-react-ui"
