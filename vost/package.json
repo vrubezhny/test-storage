@@ -1,0 +1,2337 @@
+{
+	"name": "vscode-openshift-connector",
+	"displayName": "OpenShift Toolkit",
+	"description": "Fast iterative application development on Red Hat OpenShift and Kubernetes",
+	"version": "1.15.0",
+	"license": "MIT",
+	"publisher": "redhat",
+	"author": "Red Hat",
+	"preview": false,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/redhat-developer/vscode-openshift-tools.git"
+	},
+	"bugs": "https://github.com/redhat-developer/vscode-openshift-tools/issues",
+	"engines": {
+		"vscode": "^1.82.3",
+		"npm": ">=8.6.0",
+		"node": ">=18.0.0"
+	},
+	"badges": [
+		{
+			"url": "https://img.shields.io/twitter/follow/rhdevelopers?style=social",
+			"href": "https://twitter.com/intent/follow?screen_name=rhdevelopers",
+			"description": "Tweet"
+		}
+	],
+	"categories": [
+		"Debuggers",
+		"Azure",
+		"Other"
+	],
+	"keywords": [
+		"OpenShift",
+		"Kubernetes",
+		"Serverless",
+		"Functions",
+		"Red Hat",
+		"devsandbox",
+		"kubernetes-extension-cloud-provider",
+		"debuggers",
+		"K8s",
+		"Cloud",
+		"podman",
+		"Helm",
+		"kubernetes-extension-cloud-provider"
+	],
+	"icon": "images/openshift_extension.png",
+	"main": "./out/src/extension",
+	"scripts": {
+		"verify": "node ./out/build/verify-tools.js",
+		"vscode:prepublish": "npm run build",
+		"compile": "run-p compile:*",
+		"compile:ext": "tsc -b ./",
+		"compile:checkWebviews": "tsc -p ./src/webview -noEmit",
+		"compile:webviews": "node ./build/esbuild.mjs",
+		"watch": "node ./build/esbuild-watch.mjs",
+		"clean": "shx rm -rf out/build out/src out/test out/tools out/test-resources out/*Viewer out/**.tsbuildinfo",
+		"lint": "eslint . --ext .ts --ext .tsx --quiet",
+		"lint-fix": "eslint . --ext .ts --ext .tsx --fix",
+		"lint-nic": "eslint . --ext .ts --ext .tsx --no-inline-config",
+		"check-cycles": "dpdm --no-tree --no-warning --exit-code circular:1 ./src/extension.ts",
+		"bundle-tools": "node ./out/build/bundle-tools.js --platform",
+		"todo": "leasot **/*.ts --ignore node_modules -x",
+		"test": "npm run vscode:prepublish && node ./out/build/install-vscode.js && node ./out/build/run-tests.js unit",
+		"test-integration": "npm run vscode:prepublish && node ./out/build/run-tests.js integration",
+		"test-integration:coverage": "npm run vscode:prepublish && npm run test:instrument && node ./out/build/run-tests.js integration",
+		"test:instrument": "shx rm -rf out/src-orig && shx mv out/src out/src-orig && istanbul instrument --complete-copy --embed-source --output out/src out/src-orig",
+		"test:coverage": "npm run build && npm run test:instrument && node ./out/build/install-vscode.js && node ./out/build/run-tests.js unit",
+		"build": "npm run clean && npm run lint && npm run compile && npm run bundle-tools",
+		"cluster-ui-test": "extest setup-and-run out/test/ui/cluster-ui-test.js -o test/ui/settings.json -m test/ui/.mocharc.js -e ./test-resources/extensions -c max -i",
+		"public-ui-test": "extest setup-and-run out/test/ui/public-ui-test.js -o test/ui/settings.json -m test/ui/.mocharc.js -e ./test-resources/extensions -c max -i"
+	},
+	"dependencies": {
+		"@kubernetes/client-node": "^0.21.0",
+		"@redhat-developer/vscode-redhat-telemetry": "^0.8.0",
+		"clsx": "^2.1.1",
+		"dockerode": "^4.0.2",
+		"fs-extra": "^11.2.0",
+		"git-up": "^7.0.0",
+		"got": "^11.8.6",
+		"hasha": "^5.2.2",
+		"js-yaml": "^4.1.0",
+		"json-schema": "^0.4.0",
+		"json-to-ast": "^2.1.0",
+		"lodash": "^4.17.21",
+		"mkdirp": "^3.0.1",
+		"node-yaml-parser": "^0.0.9",
+		"portfinder": "^1.0.32",
+		"rxjs": "^7.8.1",
+		"semver": "^7.6.3",
+		"shelljs": "^0.8.5",
+		"stacktrace-parser": "^0.1.10",
+		"targz": "^1.0.1",
+		"tmp": "^0.2.3",
+		"unzip-stream": "^0.3.4",
+		"validator": "^13.12.0",
+		"vscode-kubernetes-tools-api": "^1.3.0",
+		"xterm": "^5.3.0",
+		"xterm-addon-serialize": "^0.11.0",
+		"xterm-headless": "^5.3.0"
+	},
+	"devDependencies": {
+		"@devfile/api": "^2.2.2-1716821574",
+		"@mui/icons-material": "^5.16.6",
+		"@mui/lab": "^5.0.0-alpha.173",
+		"@mui/material": "^5.16.6",
+		"@mui/styles": "^5.16.6",
+		"@rjsf/core": "^5.19.4",
+		"@rjsf/mui": "^5.19.4",
+		"@rjsf/utils": "^5.19.4",
+		"@rjsf/validator-ajv8": "^5.19.4",
+		"@segment/analytics-next": "^1.72.1",
+		"@svgr/plugin-jsx": "^8.1.0",
+		"@types/chai": "^4.3.17",
+		"@types/dockerode": "^3.3.31",
+		"@types/express": "^4.17.21",
+		"@types/fs-extra": "^11.0.4",
+		"@types/lodash": "^4.17.7",
+		"@types/mocha": "^10.0.7",
+		"@types/node": "^18.19.43",
+		"@types/proxyquire": "^1.3.31",
+		"@types/react": "^17.0.80",
+		"@types/react-copy-to-clipboard": "^5.0.7",
+		"@types/react-dom": "^17.0.25",
+		"@types/react-syntax-highlighter": "^15.5.13",
+		"@types/shelljs": "^0.8.15",
+		"@types/sinon": "^17.0.3",
+		"@types/sinon-chai": "^3.2.12",
+		"@types/targz": "^1.0.4",
+		"@types/tmp": "^0.2.6",
+		"@types/unzip-stream": "^0.3.4",
+		"@types/validator": "^13.12.0",
+		"@types/vscode": "1.82.0",
+		"@typescript-eslint/eslint-plugin": "^8.0.0",
+		"@typescript-eslint/parser": "^8.0.0",
+		"@vscode/test-electron": "^2.4.1",
+		"bootstrap": "^5.3.3",
+		"chai": "^4.5.0",
+		"chokidar": "^3.6.0",
+		"clipboardy": "^2.3.0",
+		"codecov": "^3.8.2",
+		"dpdm": "^3.14.0",
+		"esbuild": "^0.19.12",
+		"esbuild-plugin-svgr": "^2.1.0",
+		"esbuild-sass-plugin": "^2.16.1",
+		"eslint": "^8.57.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-import-resolver-typescript": "^3.6.1",
+		"eslint-plugin-header": "^3.1.1",
+		"eslint-plugin-import": "^2.29.1",
+		"eslint-plugin-jsdoc": "^48.11.0",
+		"eslint-plugin-json": "^4.0.0",
+		"eslint-plugin-prettier": "^5.2.1",
+		"express": "^4.19.2",
+		"file-loader": "^6.2.0",
+		"glob": "^11.0.0",
+		"istanbul": "^0.4.5",
+		"leasot": "^14.4.0",
+		"mocha": "^10.7.0",
+		"mocha-jenkins-reporter": "^0.4.7",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.3.3",
+		"pretty-bytes": "^6.1.1",
+		"proxyquire": "^2.1.3",
+		"react": "^17.0.2",
+		"react-copy-to-clipboard": "^5.1.0",
+		"react-dom": "^17.0.2",
+		"react-error-boundary": "^4.0.13",
+		"react-phone-input-2": "^2.14.0",
+		"react-scroll-to-top": "^3.0.0",
+		"react-syntax-highlighter": "^15.5.0",
+		"remap-istanbul": "^0.13.0",
+		"showdown": "^2.1.0",
+		"shx": "^0.3.3",
+		"sinon": "^18.0.0",
+		"sinon-chai": "^3.7.0",
+		"source-map-support": "^0.5.21",
+		"survey-core": "^1.10.3",
+		"survey-react-ui": "^1.11.9",
+		"typescript": "^5.5.4",
+		"vscode-extension-tester": "^8.3",
+		"xterm-addon-fit": "^0.8.0",
+		"xterm-addon-web-links": "^0.9.0",
+		"xterm-addon-webgl": "^0.16.0"
+	},
+	"activationEvents": [
+		"onView:openshiftProjectExplorer",
+		"onView:extension.vsKubernetesExplorer",
+		"onView:openshiftComponentTypesView",
+		"onView:kubernetes.cloudExplorer",
+		"onView:openShiftTerminalPanel",
+		"onView:openshiftView",
+		"onCommand:openshift.welcome",
+		"onCommand:openshift.getStarted",
+		"onCommand:openshift.about",
+		"onCommand:openshift.oc.about",
+		"onCommand:openshift.output",
+		"onCommand:openshift.create",
+		"onCommand:openshift.delete",
+		"onCommand:openshift.open.developerConsole",
+		"onCommand:openshift.open.developerConsole.palette",
+		"onCommand:openshift.explorer.addCluster",
+		"onCommand:openshift.explorer.login",
+		"onCommand:openshift.explorer.login.credentialsLogin",
+		"onCommand:openshift.explorer.login.tokenLogin",
+		"onCommand:openshift.explorer.login.clipboard",
+		"onCommand:openshift.explorer.logout",
+		"onCommand:openshift.explorer.refresh",
+		"onCommand:openshift.componentTypesView.refresh",
+		"onCommand:openshift.project.create",
+		"onCommand:openshift.project.set",
+		"onCommand:openshift.project.delete",
+		"onCommand:openshift.project.delete.palette",
+		"onCommand:openshift.namespace.create",
+		"onCommand:openshift.namespace.set",
+		"onCommand:openshift.namespace.delete",
+		"onCommand:openshift.namespace.delete.palette",
+		"onCommand:openshift.component.openCreateComponent",
+		"onCommand:openshift.component.createFromRootWorkspaceFolder",
+		"onCommand:openshift.component.describe",
+		"onCommand:openshift.component.openInBrowser",
+		"onCommand:openshift.component.describe.palette",
+		"onCommand:openshift.component.log",
+		"onCommand:openshift.component.log.palette",
+		"onCommand:openshift.component.followLog",
+		"onCommand:openshift.component.followLog.palette",
+		"onCommand:openshift.componentTypesView.registry.closeView",
+		"onCommand:openshift.component.debug",
+		"onCommand:openshift.component.debug.palette",
+		"onCommand:openshift.resource.load",
+		"onCommand:openshift.resource.unInstall",
+		"onCommand:openshift.component.folder.create",
+		"onCommand:openshift.explorer.reportIssue",
+		"onCommand:openshift.explorer.switchContext",
+		"onCommand:clusters.openshift.project.openConsole",
+		"onCommand:clusters.openshift.deploy",
+		"onCommand:clusters.openshift.build.start",
+		"onCommand:clusters.openshift.build.showLog",
+		"onCommand:clusters.openshift.build.showLog.palette",
+		"onCommand:clusters.openshift.build.followLog",
+		"onCommand:clusters.openshift.build.delete",
+		"onCommand:clusters.openshift.build.delete.palette",
+		"onCommand:clusters.openshift.build.rebuild",
+		"onCommand:clusters.openshift.build.openConsole",
+		"onCommand:clusters.openshift.deploy.dc.showLog",
+		"onCommand:clusters.openshift.deploy.dc.showLog.palette",
+		"onCommand:clusters.openshift.deploy.delete",
+		"onCommand:clusters.openshift.deploy.delete.palette",
+		"onCommand:clusters.openshift.deploy.rcShowLog",
+		"onCommand:clusters.openshift.deploy.rcShowLog.palette",
+		"onCommand:clusters.openshift.deployment.openConsole",
+		"onCommand:clusters.openshift.imagestream.openConsole",
+		"onCommand:openshift.componentTypesView.registry.openInView",
+		"onCommand:openshift.helm.openView",
+		"onCommand:openshift.component.deleteConfigurationFiles",
+		"onCommand:openshift.component.deleteSourceFolder",
+		"onWalkthrough:openshiftWalkthrough",
+		"onWalkthrough:serverlessFunctionWalkthrough",
+		"onFileSystem:k8smsx"
+	],
+	"contributes": {
+		"configurationDefaults": {
+			"vs-kubernetes": {
+				"vs-kubernetes.disable-context-info-status-bar": true,
+				"vs-kubernetes.disable-namespace-info-status-bar": true,
+				"vs-kubernetes.outputFormat": "yaml"
+			}
+		},
+		"icons": {
+			"current-context": {
+				"description": "context",
+				"default": "selection"
+			},
+			"project-node": {
+				"description": "project node",
+				"default": "project"
+			}
+		},
+		"commands": [
+			{
+				"command": "openshift.about",
+				"title": "About",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.oc.about",
+				"title": "Print OKD Client Tool Version",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.create",
+				"title": "Create",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.delete",
+				"title": "Delete",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.start",
+				"title": "Start Build",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy",
+				"title": "Deploy",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.output",
+				"title": "Show Output Channel",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.logout",
+				"title": "Log out",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster",
+				"title": "Add OpenShift Cluster",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/add-cluster.svg",
+					"light": "images/title/light/add-cluster.svg"
+				}
+			},
+			{
+				"command": "openshift.explorer.stopCluster",
+				"title": "Stop OpenShift Local",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.login",
+				"title": "Login into Cluster",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/icon-login.svg",
+					"light": "images/title/light/icon-login.svg"
+				}
+			},
+			{
+				"command": "openshift.explorer.login.tokenLogin",
+				"title": "Login into Cluster with token",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.login.credentialsLogin",
+				"title": "Login into Cluster with credentials",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.login.clipboard",
+				"title": "Login into Cluster using URL and token from clipboard",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.switchContext",
+				"title": "Switch Contexts",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/users.svg",
+					"light": "images/title/light/users.svg"
+				}
+			},
+			{
+				"command": "openshift.explorer.refresh",
+				"title": "Refresh Application Explorer View",
+				"category": "OpenShift",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "openshift.explorer.reportIssue",
+				"title": "Report Extension Issue on GitHub",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/icon-issue.svg",
+					"light": "images/title/light/icon-issue.svg"
+				}
+			},
+			{
+				"command": "openshift.show.feedback",
+				"title": "Share your feedback",
+				"category": "OpenShift",
+				"icon": "$(feedback)"
+			},
+			{
+				"command": "openshift.project.create",
+				"title": "New Project",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.namespace.create",
+				"title": "New Namespace",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.openView",
+				"title": "Browse and Install Helm Charts",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.install",
+				"title": "Install",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.manageRepository",
+				"title": "Manage Repositories",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.open",
+				"title": "Open Helm Charts",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.add",
+				"title": "Add repository",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.edit",
+				"title": "Edit repository",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.delete",
+				"title": "Delete repository",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.helm.sync",
+				"title": "Sync repository",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.project.delete",
+				"title": "Delete Project",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.namespace.delete",
+				"title": "Delete Namespace",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.project.delete.palette",
+				"title": "Delete Project",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.namespace.delete.palette",
+				"title": "Delete Namespace",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.open.configFile",
+				"title": "Open in editor",
+				"category": "OpenShift",
+				"icon": "$(link-external)"
+			},
+			{
+				"command": "openshift.project.set",
+				"title": "Change Active Project",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/set-project.svg",
+					"light": "images/title/light/set-project.svg"
+				}
+			},
+			{
+				"command": "openshift.namespace.set",
+				"title": "Change Active Namespace",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/set-project.svg",
+					"light": "images/title/light/set-project.svg"
+				}
+			},
+			{
+				"command": "openshift.project.set.palette",
+				"title": "Set Active Project",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.namespace.set.palette",
+				"title": "Set Active Namespace",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.openCreateComponent",
+				"title": "Create Component",
+				"category": "OpenShift",
+				"icon": {
+					"light": "images/title/light/add-cluster.svg",
+					"dark": "images/title/dark/add-cluster.svg"
+				}
+			},
+			{
+				"command": "openshift.component.createFromRootWorkspaceFolder",
+				"title": "Create Component From Folder",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.dev",
+				"title": "Start Dev",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.dev.manual",
+				"title": "Start Dev (manually trigger rebuild)",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.binding.add",
+				"title": "Bind Service",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.exitDevMode",
+				"title": "Stop Dev",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.forceExitDevMode",
+				"title": "Force Stop Dev",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.deploy",
+				"title": "Deploy",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.undeploy",
+				"title": "Undeploy",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.showDevTerminal",
+				"title": "Show Dev Terminal",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.describe",
+				"title": "Describe",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.describe.palette",
+				"title": "Describe Component",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.log",
+				"title": "Show Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.log.palette",
+				"title": "Show Component Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.followLog",
+				"title": "Follow Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.followLog.palette",
+				"title": "Follow Component Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.openInBrowser",
+				"title": "Open in Browser",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.commands.command.run",
+				"title": "Run Command",
+				"category": "OpenShift",
+				"icon": "$(notebook-execute)"
+			},
+			{
+				"command": "openshift.open.developerConsole",
+				"title": "Open Console Dashboard",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.open.developerConsole.palette",
+				"title": "Open Console Dashboard for Current Cluster",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.open.operatorBackedServiceCatalog",
+				"title": "Open Operator Backed Service Catalog"
+			},
+			{
+				"command": "openshift.component.debug",
+				"title": "Debug",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.debug.palette",
+				"title": "Debug Component",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.project.openConsole",
+				"title": "Open in Console",
+				"Category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.showLog",
+				"title": "Show Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.showLog.palette",
+				"title": "Show Build's Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy.dc.showLog",
+				"title": "Show Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy.dc.showLog.palette",
+				"title": "Show DeploymentConfig's Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.followLog",
+				"title": "Follow Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.delete.palette",
+				"title": "Delete Build",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.delete",
+				"title": "Delete",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.rebuild",
+				"title": "Rebuild",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.build.openConsole",
+				"title": "Open in Console",
+				"Category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy.rcShowLog.palette",
+				"title": "Show Replica's Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy.rcShowLog",
+				"title": "Show Log",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy.delete.palette",
+				"title": "Delete Replica",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deploy.delete",
+				"title": "Delete",
+				"category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.deployment.openConsole",
+				"title": "Open in Console",
+				"Category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.imagestream.openConsole",
+				"title": "Open in Console",
+				"Category": "OpenShift"
+			},
+			{
+				"command": "clusters.openshift.route.open",
+				"title": "Open in Browser",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.componentTypesView.refresh",
+				"title": "Refresh Components Types View",
+				"category": "OpenShift",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "openshift.componentType.openStarterProjectRepository",
+				"title": "Open in Browser",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.componentType.cloneStarterProjectRepository",
+				"title": "Clone to Workspace",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster.openLaunchSandboxPage",
+				"title": "Launch Developer Sandbox",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster.openCreateClusterPage",
+				"title": "Deploy it in your public cloud",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster.openCrcAddClusterPage",
+				"title": "Open Add OpenShift Local Setup Workflow",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster.crcSetup",
+				"title": "Run OpenShift Local Setup Command",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster.crcStart",
+				"title": "Run OpenShift Local Start Command",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.explorer.addCluster.crcStop",
+				"title": "Run OpenShift Local Stop Command",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.revealContextInExplorer",
+				"title": "Reveal in Explorer"
+			},
+			{
+				"command": "openshift.component.revealInExplorer",
+				"title": "Reveal in Explorer",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.componentsView.refresh",
+				"title": "Refresh Components View",
+				"category": "OpenShift",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "openshift.componentTypesView.registry.openInView",
+				"title": "Open Registry View",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/book.svg",
+					"light": "images/title/light/book.svg"
+				}
+			},
+			{
+				"command": "openshift.componentTypesView.registry.add",
+				"title": "Add Registry",
+				"category": "OpenShift",
+				"icon": {
+					"dark": "images/title/dark/add-cluster.svg",
+					"light": "images/title/light/add-cluster.svg"
+				}
+			},
+			{
+				"command": "openshift.componentTypesView.registry.remove",
+				"title": "Remove",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.componentTypesView.registry.edit",
+				"title": "Edit",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.componentTypesView.registry.openInBrowser",
+				"title": "Open in Browser",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.componentTypesView.registry.openInEditor",
+				"title": "Open in Editor",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.welcome",
+				"title": "Welcome",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.getStarted",
+				"title": "Get Started",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.service.create",
+				"title": "Create Operator-Backed Service",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.route.create",
+				"title": "Create Route",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.deployment.create.fromImageUrl",
+				"title": "Create Deployment from Container Image URL",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.deployment.shell",
+				"title": "Open Shell to Container",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.deployment.scale",
+				"title": "Scale",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.resource.load",
+				"title": "Load",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.resource.delete",
+				"title": "Delete",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.resource.watchLogs",
+				"title": "Watch Logs",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.resource.unInstall",
+				"title": "Uninstall",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.resource.openInDeveloperConsole",
+				"title": "Open in Developer Console"
+			},
+			{
+				"command": "openshift.resource.openInBrowser",
+				"title": "Open in Browser"
+			},
+			{
+				"command": "openshift.resource.portForward",
+				"title": "Port Forward"
+			},
+			{
+				"command": "openshift.openStatusBar",
+				"title": "OpenShift",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.dev.onPodman",
+				"title": "Start Dev on Podman",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.dev.onPodman.manual",
+				"title": "Start Dev on Podman (manually trigger rebuild)",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.deleteConfigurationFiles",
+				"title": "Delete Component Configuration",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.component.deleteSourceFolder",
+				"title": "Delete Source Code Folder",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.sandbox.open.dashboard",
+				"title": "Open Developer Console",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.sandbox.signup",
+				"title": "Provision OpenShift Developer Sandbox",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.openFunction",
+				"title": "Open Function",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.createFunction",
+				"title": "Create Function",
+				"category": "OpenShift",
+				"icon": "$(plus)"
+			},
+			{
+				"command": "openshift.Serverless.manageRepository",
+				"title": "Manage Knative Function Template Repositories",
+				"category": "OpenShift",
+				"icon": "$(gist)"
+			},
+			{
+				"command": "openshift.Serverless.refresh",
+				"title": "Refresh Serverless Function View",
+				"category": "OpenShift",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "openshift.Serverless.baseBuild",
+				"title": "Base Build",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.s2iBuild",
+				"title": "S2I Build",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.onClusterBuild",
+				"title": "On Cluster Build",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.deploy",
+				"title": "Deploy",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.undeploy",
+				"title": "UnDeploy",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.buildAndRun",
+				"title": "Build and Run",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.run",
+				"title": "Run",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.stopRun",
+				"title": "Stop",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.addEnv",
+				"title": "Environment Variables",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.addLabel",
+				"title": "Labels",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.addVolume",
+				"title": "Volumes",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.addGit",
+				"title": "Git",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.removeEnv",
+				"title": "Environment Variables",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.removeLabel",
+				"title": "Labels",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.removeVolume",
+				"title": "Volumes",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.removeGit",
+				"title": "Git",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.invoke",
+				"title": "Invoke",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.showInTerminal",
+				"title": "Show in terminal",
+				"category": "OpenShift"
+			},
+			{
+				"command": "openshift.Serverless.removeSession",
+				"title": "Remove Serverless Session",
+				"category": "OpenShift"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "openshift.explorer.refresh",
+				"key": "alt+shift+r",
+				"mac": "ctrl+shift+r"
+			},
+			{
+				"command": "openshift.component.lastPush",
+				"key": "alt+shift+p",
+				"mac": "ctrl+shift+p"
+			}
+		],
+		"submenus": [
+			{
+				"id": "serverlessfunction/addConfig",
+				"label": "Add"
+			},
+			{
+				"id": "serverlessfunction/removeConfig",
+				"label": "Remove"
+			},
+			{
+				"id": "serverlessfunction/buildConfig",
+				"label": "Build Configuration"
+			},
+			{
+				"id": "view/item/context/createService",
+				"label": "Create..."
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "openshiftView",
+					"title": "OpenShift",
+					"icon": "images/openshift_view.svg"
+				}
+			],
+			"panel": [
+				{
+					"icon": "images/openshift_view.svg",
+					"id": "openShiftTerminalPanel",
+					"title": "OpenShift Terminal"
+				}
+			]
+		},
+		"views": {
+			"openshiftView": [
+				{
+					"id": "openshiftProjectExplorer",
+					"name": "Application Explorer"
+				},
+				{
+					"id": "openshiftComponentsView",
+					"name": "Components"
+				},
+				{
+					"id": "openshiftComponentTypesView",
+					"name": "Devfile Registries"
+				},
+				{
+					"id": "openshiftServerlessFunctionsView",
+					"name": "Serverless Functions"
+				},
+				{
+					"id": "openshiftDebugView",
+					"name": "Debug Sessions"
+				}
+			],
+			"openShiftTerminalPanel": [
+				{
+					"id": "openShiftTerminalView",
+					"name": "OpenShift Terminal",
+					"type": "webview"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "openshiftProjectExplorer",
+				"contents": "Cluster is not accessible or you are not logged in.\n[Login](command:openshift.explorer.login)\n[Select Kubernetes Context](command:openshift.explorer.switchContext)\n[Add OpenShift Cluster](command:openshift.explorer.addCluster)",
+				"enablement": "openshift.app.explorer.init"
+			},
+			{
+				"view": "openshiftComponentsView",
+				"contents": "You have no OpenShift Components in your workspace yet.\nYou can create an OpenShift component from a local codebase, a remote git repository, or a template project.\n[Create Component](command:openshift.component.openCreateComponent)",
+				"enablement": "openshift.component.explorer.init"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "openshift.component.createFromRootWorkspaceFolder",
+					"when": "explorerResourceIsFolder && explorerResourceIsRoot && resourceFilename not in ext.folderContainsDevfile"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "openshift.project.delete",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.project.set",
+					"when": "view == openshiftProjectExplorer && isOpenshiftCluster"
+				},
+				{
+					"command": "openshift.namespace.set",
+					"when": "view == openshiftProjectExplorer && !isOpenshiftCluster"
+				},
+				{
+					"command": "openshift.open.configFile",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.componentType.openStarterProjectRepository",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentType.cloneStarterProjectRepository",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.createFromRootWorkspaceFolder",
+					"when": "view == workbench.view.explorer"
+				},
+				{
+					"command": "clusters.openshift.build.delete",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "clusters.openshift.build.showLog",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "clusters.openshift.deploy.delete",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.explorer.addCluster",
+					"when": "view == openshiftProjectExplorer && isVSCode == 1"
+				},
+				{
+					"command": "openshift.explorer.login",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "clusters.openshift.deploy.rcShowLog",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.component.describe",
+					"when": "view == openshiftComponentsView"
+				},
+				{
+					"command": "openshift.component.log",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.component.followLog",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.component.commands.command.run",
+					"when": "view == openshiftComponentsView"
+				},
+				{
+					"command": "openshift.open.developerConsole",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "openshift.open.operatorBackedServiceCatalog",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.debug",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "clusters.openshift.deploy.dc.showLog",
+					"when": "view == openshiftProjectExplorer"
+				},
+				{
+					"command": "clusters.openshift.route.open",
+					"when": "false"
+				},
+				{
+					"command": "clusters.openshift.project.openConsole",
+					"when": "false"
+				},
+				{
+					"command": "clusters.openshift.imagestream.openConsole",
+					"when": "false"
+				},
+				{
+					"command": "clusters.openshift.deployment.openConsole",
+					"when": "false"
+				},
+				{
+					"command": "clusters.openshift.build.openConsole",
+					"when": "false"
+				},
+				{
+					"command": "openshift.explorer.addCluster.openCrcAddClusterPage",
+					"when": "false"
+				},
+				{
+					"command": "openshift.explorer.addCluster.openLaunchSandboxPage",
+					"when": "false"
+				},
+				{
+					"command": "openshift.explorer.addCluster.openCreateClusterPage",
+					"when": "false"
+				},
+				{
+					"command": "openshift.explorer.addCluster.crcSetup",
+					"when": "false"
+				},
+				{
+					"command": "openshift.explorer.addCluster.crcStart",
+					"when": "false"
+				},
+				{
+					"command": "openshift.explorer.addCluster.crcStop",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.revealInExplorer",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.dev",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.dev.manual",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.dev.onPodman",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.dev.onPodman.manual",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.deploy",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.undeploy",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.describe.palette",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.followLog.palette",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.log.palette",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.revealContextInExplorer",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.add",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.remove",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.edit",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.openInView",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.manageRepository",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.openView",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.install",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.add",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.open",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.edit",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.delete",
+					"when": "false"
+				},
+				{
+					"command": "openshift.helm.sync",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.openInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.openInEditor",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.load",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.delete",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.watchLogs",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.portForward",
+					"when": "false"
+				},
+				{
+					"command": "openshift.deployment.shell",
+					"when": "false"
+				},
+				{
+					"command": "openshift.deployment.scale",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.unInstall",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.openInDeveloperConsole",
+					"when": "false"
+				},
+				{
+					"command": "openshift.resource.openInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.forceExitDevMode",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.deleteConfigurationFiles",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.deleteSourceFolder",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.openInBrowser",
+					"when": "false"
+				},
+				{
+					"command": "openshift.component.binding.add",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.openFunction",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.refresh",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.baseBuild",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.s2iBuild",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.onClusterBuild",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.deploy",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.undeploy",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.buildAndRun",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.run",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.stopRun",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.invoke",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.addEnv",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.addLabel",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.addVolume",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.addGit",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.removeEnv",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.removeLabel",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.removeVolume",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.removeGit",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.showInTerminal",
+					"when": "false"
+				},
+				{
+					"command": "openshift.Serverless.removeSession",
+					"when": "false"
+				},
+				{
+					"command": "openshift.project.delete",
+					"when": "false"
+				},
+				{
+					"command": "openshift.namespace.delete",
+					"when": "false"
+				}
+			],
+			"view/title": [
+				{
+					"command": "openshift.componentTypesView.registry.openInView",
+					"when": "view == openshiftComponentTypesView",
+					"group": "navigation"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.add",
+					"when": "view == openshiftComponentTypesView",
+					"group": "navigation"
+				},
+				{
+					"command": "openshift.componentTypesView.refresh",
+					"when": "view == openshiftComponentTypesView",
+					"group": "navigation"
+				},
+				{
+					"command": "openshift.componentsView.refresh",
+					"when": "view == openshiftComponentsView",
+					"group": "navigation"
+				},
+				{
+					"command": "openshift.explorer.addCluster",
+					"when": "view == openshiftProjectExplorer && isVSCode == 1",
+					"group": "navigation@0"
+				},
+				{
+					"command": "openshift.explorer.login",
+					"when": "view == openshiftProjectExplorer",
+					"group": "navigation@1"
+				},
+				{
+					"command": "openshift.explorer.switchContext",
+					"when": "view == openshiftProjectExplorer",
+					"group": "navigation@2"
+				},
+				{
+					"command": "openshift.explorer.refresh",
+					"when": "view == openshiftProjectExplorer",
+					"group": "navigation@3"
+				},
+				{
+					"command": "openshift.explorer.reportIssue",
+					"when": "view == openshiftProjectExplorer",
+					"group": "navigation@4"
+				},
+				{
+					"command": "openshift.show.feedback",
+					"when": "view == openshiftProjectExplorer",
+					"group": "navigation@5"
+				},
+				{
+					"command": "openshift.Serverless.createFunction",
+					"when": "view == openshiftServerlessFunctionsView",
+					"group": "navigation@0"
+				},
+				{
+					"command": "openshift.Serverless.refresh",
+					"when": "view == openshiftServerlessFunctionsView",
+					"group": "navigation@1"
+				},
+				{
+					"command": "openshift.Serverless.manageRepository",
+					"when": "view == openshiftServerlessFunctionsView",
+					"group": "navigation@2"
+				},
+				{
+					"command": "openshift.component.openCreateComponent",
+					"when": "view == openshiftComponentsView",
+					"group": "navigation"
+				}
+			],
+			"serverlessfunction/addConfig": [
+				{
+					"command": "openshift.Serverless.addEnv",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@0"
+				},
+				{
+					"command": "openshift.Serverless.addGit",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@1"
+				},
+				{
+					"command": "openshift.Serverless.addLabel",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@2"
+				},
+				{
+					"command": "openshift.Serverless.addVolume",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@3"
+				}
+			],
+			"serverlessfunction/removeConfig": [
+				{
+					"command": "openshift.Serverless.removeEnv",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@0"
+				},
+				{
+					"command": "openshift.Serverless.removeGit",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@1"
+				},
+				{
+					"command": "openshift.Serverless.removeLabel",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@2"
+				},
+				{
+					"command": "openshift.Serverless.removeVolume",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@3"
+				}
+			],
+			"serverlessfunction/buildConfig": [
+				{
+					"command": "openshift.Serverless.baseBuild",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctions|localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@0"
+				},
+				{
+					"command": "openshift.Serverless.s2iBuild",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctions|localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@1"
+				},
+				{
+					"command": "openshift.Serverless.onClusterBuild",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctions|localFunctionsWithBuild|localDeployFunctions)$/ && isLoggedIn",
+					"group": "c1@2"
+				}
+			],
+			"view/item/context/createService": [
+				{
+					"command": "openshift.helm.openView",
+					"when": "view == openshiftProjectExplorer && isLoggedIn && viewItem =~ /openshift.project.*/i",
+					"group": "c2"
+				},
+				{
+					"command": "openshift.service.create",
+					"when": "view == openshiftProjectExplorer && isLoggedIn && viewItem =~ /openshift.project.*/i && showCreateService",
+					"group": "c2"
+				},
+				{
+					"command": "openshift.route.create",
+					"when": "view == openshiftProjectExplorer && isLoggedIn && viewItem =~ /openshift.project.*/i && isOpenshiftCluster && showCreateRoute",
+					"group": "c2"
+				},
+				{
+					"command": "openshift.deployment.create.fromImageUrl",
+					"when": "view == openshiftProjectExplorer && isLoggedIn && viewItem =~ /openshift.project.*/i",
+					"group": "c2"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "openshift.sandbox.signup",
+					"category": "1@1",
+					"when": "viewItem == openshift.sandbox.status.none"
+				},
+				{
+					"command": "openshift.sandbox.open.dashboard",
+					"category": "1@1",
+					"when": "viewItem == openshift.sandbox.status.ready"
+				},
+				{
+					"command": "clusters.openshift.deployment.openConsole",
+					"group": "3@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem == vsKubernetes.resource.dc"
+				},
+				{
+					"command": "clusters.openshift.imagestream.openConsole",
+					"group": "3@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /vsKubernetes\\.resource\\.imagestream*/i"
+				},
+				{
+					"command": "clusters.openshift.build.start",
+					"group": "2@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem == vsKubernetes.resource.bc"
+				},
+				{
+					"command": "clusters.openshift.deploy",
+					"group": "2@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem == vsKubernetes.resource.dc"
+				},
+				{
+					"command": "clusters.openshift.deploy.dc.showLog",
+					"group": "2@1",
+					"when": "view == extension.vsKubernetesExplorer && viewItem == vsKubernetes.resource.dc"
+				},
+				{
+					"command": "clusters.openshift.build.openConsole",
+					"group": "3@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem == vsKubernetes.resource.bc"
+				},
+				{
+					"command": "clusters.openshift.build.showLog",
+					"group": "1@1",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /openShift\\.resource\\.build.*/i"
+				},
+				{
+					"command": "clusters.openshift.build.followLog",
+					"group": "1@2",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /openShift\\.resource\\.build.*/i"
+				},
+				{
+					"command": "clusters.openshift.build.delete",
+					"group": "2@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /openShift\\.resource\\.build.*/i"
+				},
+				{
+					"command": "clusters.openshift.deploy.rcShowLog",
+					"group": "1@1",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /openShift\\.resource\\.rc.*/i"
+				},
+				{
+					"command": "clusters.openshift.deploy.delete",
+					"group": "2@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /openShift\\.resource\\.rc.*/i"
+				},
+				{
+					"command": "clusters.openshift.build.rebuild",
+					"group": "1@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /openShift\\.resource\\.build.*/i"
+				},
+				{
+					"command": "openshift.open.developerConsole",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext && isOpenshiftCluster",
+					"group": "c0"
+				},
+				{
+					"command": "openshift.project.create",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext && canCreateNamespace && isOpenshiftCluster",
+					"group": "c1@1"
+				},
+				{
+					"command": "openshift.namespace.create",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext && canCreateNamespace && !isOpenshiftCluster",
+					"group": "c1@1"
+				},
+				{
+					"command": "openshift.project.set",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext && isOpenshiftCluster",
+					"group": "c1@2"
+				},
+				{
+					"command": "openshift.namespace.set",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext && !isOpenshiftCluster",
+					"group": "c1@2"
+				},
+				{
+					"command": "openshift.explorer.logout",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext && isLoggedIn",
+					"group": "c3"
+				},
+				{
+					"command": "openshift.about",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext",
+					"group": "c4"
+				},
+				{
+					"command": "openshift.output",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sContext",
+					"group": "c5"
+				},
+				{
+					"submenu": "view/item/context/createService",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*/i && isLoggedIn",
+					"group": "p2"
+				},
+				{
+					"command": "openshift.project.set",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*/i && isOpenshiftCluster",
+					"group": "p3@1"
+				},
+				{
+					"command": "openshift.namespace.set",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*/i && !isOpenshiftCluster",
+					"group": "p3@1"
+				},
+				{
+					"command": "openshift.project.delete",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*.can-delete/i && isOpenshiftCluster",
+					"group": "p3@2"
+				},
+				{
+					"command": "openshift.namespace.delete",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*.can-delete/i && !isOpenshiftCluster",
+					"group": "p3@2"
+				},
+				{
+					"command": "openshift.project.set",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*/i && isOpenshiftCluster",
+					"group": "inline"
+				},
+				{
+					"command": "openshift.namespace.set",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift.project.*/i && !isOpenshiftCluster",
+					"group": "inline"
+				},
+				{
+					"command": "openshift.component.describe",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*/",
+					"group": "c3@1"
+				},
+				{
+					"command": "openshift.component.log",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-run.*/",
+					"group": "c3@2"
+				},
+				{
+					"command": "openshift.component.followLog",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-run.*/",
+					"group": "c3@3"
+				},
+				{
+					"command": "openshift.component.deleteConfigurationFiles",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c3@4"
+				},
+				{
+					"command": "openshift.component.deleteSourceFolder",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c3@5"
+				},
+				{
+					"command": "openshift.component.debug",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.deb-nrn.*/ && viewItem =~ /openshift\\.component.*\\.dev-run.*/",
+					"group": "c4@5"
+				},
+				{
+					"command": "openshift.component.revealContextInExplorer",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /openshift\\.component.*/ || viewItem == componentNotPushed",
+					"group": "c5@1"
+				},
+				{
+					"command": "openshift.component.dev",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c1@1"
+				},
+				{
+					"command": "openshift.component.dev.manual",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c1@2"
+				},
+				{
+					"command": "openshift.component.dev.onPodman",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c1@3"
+				},
+				{
+					"command": "openshift.component.dev.onPodman.manual",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c1@4"
+				},
+				{
+					"command": "openshift.component.exitDevMode",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-(?:str)|(?:run).*/",
+					"group": "c1@5"
+				},
+				{
+					"command": "openshift.component.forceExitDevMode",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-stp.*/",
+					"group": "c1@6"
+				},
+				{
+					"command": "openshift.component.deploy",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dep-nrn.*/ || viewItem =~ /openshift\\.component.*\\.dep-run.*/",
+					"group": "c2@0"
+				},
+				{
+					"command": "openshift.component.undeploy",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dep-nrn.*/ || viewItem =~ /openshift\\.component.*\\.dep-run.*/",
+					"group": "c2@1"
+				},
+				{
+					"command": "openshift.component.binding.add",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-nrn.*/",
+					"group": "c2@2"
+				},
+				{
+					"command": "openshift.component.showDevTerminal",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-run.*/",
+					"group": "c1@3"
+				},
+				{
+					"command": "openshift.component.openInBrowser",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*\\.dev-run.*/",
+					"group": "c3@4"
+				},
+				{
+					"command": "clusters.openshift.project.openConsole",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /vsKubernetes\\.resource\\.project*/i"
+				},
+				{
+					"command": "clusters.openshift.route.open",
+					"group": "2@0",
+					"when": "view == extension.vsKubernetesExplorer && viewItem =~ /vsKubernetes\\.resource\\.route/i"
+				},
+				{
+					"command": "openshift.explorer.login.tokenLogin",
+					"when": "view == openshiftProjectExplorer && viewItem == loginRequired"
+				},
+				{
+					"command": "openshift.explorer.login.credentialsLogin",
+					"when": "view == openshiftProjectExplorer && viewItem == loginRequired"
+				},
+				{
+					"command": "openshift.open.configFile",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.openConfigFile",
+					"group": "inline"
+				},
+				{
+					"command": "openshift.component.revealInExplorer",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\.component.*/",
+					"group": "c40@1"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.edit",
+					"when": "view == openshiftComponentTypesView && viewItem == devfileRegistry && viewItem != DefaultdevfileRegistry",
+					"group": "1@0"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.remove",
+					"when": "view == openshiftComponentTypesView && viewItem == devfileRegistry && viewItem != DefaultdevfileRegistry",
+					"group": "1@0"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.openInBrowser",
+					"when": "view == openshiftComponentTypesView && viewItem == devfileRegistry",
+					"group": "0@0"
+				},
+				{
+					"command": "openshift.componentTypesView.registry.openInEditor",
+					"when": "view == openshiftComponentTypesView && viewItem == devfileRegistry",
+					"group": "0@0"
+				},
+				{
+					"command": "openshift.resource.load",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.(?!helm)/"
+				},
+				{
+					"command": "openshift.resource.portForward",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.(?!helm)/"
+				},
+				{
+					"command": "openshift.resource.delete",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.(?!helm)/"
+				},
+				{
+					"command": "openshift.resource.watchLogs",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.(?!helm|pod)/"
+				},
+				{
+					"command": "openshift.deployment.shell",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.Deployment/"
+				},
+				{
+					"command": "openshift.deployment.scale",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.Deployment/"
+				},
+				{
+					"command": "openshift.resource.load",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sObject.helm"
+				},
+				{
+					"command": "openshift.resource.unInstall",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.k8sObject.helm"
+				},
+				{
+					"command": "openshift.resource.openInDeveloperConsole",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\.(?!helm|pod)/ && isOpenshiftCluster"
+				},
+				{
+					"command": "openshift.resource.openInBrowser",
+					"when": "view == openshiftProjectExplorer && viewItem =~ /^openshift\\.k8sObject\\..*route$/ && isOpenshiftCluster"
+				},
+				{
+					"command": "openshift.Serverless.buildAndRun",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctions|localFunctionsWithBuild|localDeployFunctions)$/"
+				},
+				{
+					"command": "openshift.Serverless.run",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/"
+				},
+				{
+					"command": "openshift.Serverless.invoke",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions|running)$/"
+				},
+				{
+					"command": "openshift.Serverless.deploy",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctions|localFunctionsWithBuild|localDeployFunctions)$/ && isLoggedIn"
+				},
+				{
+					"command": "openshift.Serverless.undeploy",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localDeployFunctions|deployFunctions)$/ && isLoggedIn"
+				},
+				{
+					"command": "openshift.Serverless.stopRun",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(running)$/"
+				},
+				{
+					"submenu": "serverlessfunction/addConfig",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@1"
+				},
+				{
+					"submenu": "serverlessfunction/removeConfig",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@2"
+				},
+				{
+					"submenu": "serverlessfunction/buildConfig",
+					"when": "view == openshiftServerlessFunctionsView && viewItem =~ /^(localFunctions|localFunctionsWithBuild|localDeployFunctions)$/",
+					"group": "c1@2"
+				},
+				{
+					"command": "openshift.component.commands.command.run",
+					"when": "view == openshiftComponentsView && viewItem =~ /openshift\\-component-command.*\\.dev-run.*/",
+					"group": "inline"
+				},
+				{
+					"command": "openshift.helm.add",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.helm.repos",
+					"group": "c1"
+				},
+				{
+					"command": "openshift.helm.manageRepository",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.helm.repos",
+					"group": "c2"
+				},
+				{
+					"command": "openshift.helm.openView",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.helm.repos",
+					"group": "c3"
+				},
+				{
+					"command": "openshift.helm.edit",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.helm.repo",
+					"group": "c1"
+				},
+				{
+					"command": "openshift.helm.delete",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.helm.repo",
+					"group": "c2"
+				},
+				{
+					"command": "openshift.helm.sync",
+					"when": "view == openshiftProjectExplorer && viewItem == openshift.helm.repo",
+					"group": "c3"
+				}
+			]
+		},
+		"walkthroughs": [
+			{
+				"id": "openshiftWalkthrough",
+				"title": "Getting Started with OpenShift Toolkit",
+				"description": "Start your application development on OpenShift or Kubernetes",
+				"steps": [
+					{
+						"id": "login",
+						"title": "Login/Provision OpenShift cluster",
+						"description": "Users can Login to an existing OpenShift cluster using the login button.\nTo provision a new OpenShift cluster, **Add OpenShift Cluster** button opens a guided workflow to provision a local, sandbox or hyrid cloud cluster.\n[Login to the existing OpenShift cluster](command:openshift.explorer.login)\n[Provision local OpenShift cluster](command:openshift.explorer.addCluster?[\"crc\"])\n[Provision Red Hat Developer Sandbox cluster](command:openshift.explorer.addCluster?[\"sandbox\"])",
+						"media": {
+							"image": "images/walkthrough/loginCluster.gif",
+							"altText": "login to cluster"
+						},
+						"completionEvents": [
+							"onCommand:openshift.explorer.login",
+							"onCommand:openshift.explorer.addCluster",
+							"onCommand:openshift.explorer.login.credentialsLogin",
+							"onCommand:openshift.explorer.login.tokenLogin"
+						]
+					},
+					{
+						"id": "createComponentWizard",
+						"title": "Create Component",
+						"description": "By clicking on the '+' in the Components view in the OpenShift sidebar, you can configure a project so that it can be run on OpenShift/Kubernetes. You can import an existing local codebase, import an existing remote git repository, or create a new project from a template.\n[Create Component](command:openshift.component.openCreateComponent)",
+						"media": {
+							"image": "images/walkthrough/create-component-demo.gif",
+							"altText": "Screencast of creating a component from a git repository"
+						}
+					},
+					{
+						"id": "createComponentFromWorkspaceFolder",
+						"title": "Create Component from workspace folder",
+						"description": "If you right click on a root folder in the explorer, you can use the `Create Component From Folder` option to create a component from that folder directly.",
+						"media": {
+							"image": "images/walkthrough/createComponentFromWorkspaceFolder.gif",
+							"altText": "create component from workspace folder"
+						}
+					},
+					{
+						"id": "showRegistries",
+						"title": "Create Component from Devfile registries webview",
+						"description": "Select a specific devfile registry to create a component from a template project more quickly.\n[Browse Devfile Registries](command:openshift.componentTypesView.registry.openInView)",
+						"media": {
+							"image": "images/walkthrough/showRegistries.gif",
+							"altText": "show registry"
+						},
+						"completionEvents": [
+							"onCommand:openshift.componentTypesView.registry.openInView"
+						]
+					},
+					{
+						"id": "helmChart",
+						"title": "Work with Helm Charts",
+						"description": "Browse the catalog to discover and install Helm Charts.\n[Browse Helm Chart](command:openshift.helm.openView)",
+						"media": {
+							"image": "images/walkthrough/helm.gif",
+							"altText": "helm chart"
+						},
+						"completionEvents": [
+							"onCommand:openshift.helm.openView"
+						]
+					},
+					{
+						"id": "deployContainerImage",
+						"title": "Deploy Container Image from URL",
+						"description": "In the Application Explorer sidebar panel, expand the tree item corresponding to the OpenShift/Kubernetes cluster, then right click on the project, and select \"Create...\" > \"Create Deployment from Container Image URL\". You will be asked to enter the URL to the container image and enter a name for the deployment. Once you've submitted this information, the Deployment will be created, and the logs for the first container created as a part of the Deployment will be opened in the OpenShift Terminal.",
+						"media": {
+							"image": "images/walkthrough/deploy-a-container-image.gif",
+							"altText": "Creating a Deployment of the Docker Hub MongoDB container image called my-mongo-db using the steps from the description"
+						},
+						"completionEvents": [
+							"onCommand:openshift.deployment.create.fromImageUrl"
+						]
+					},
+					{
+						"id": "startDevComponent",
+						"title": "Start a component in development mode",
+						"description": "This is inner loop development and allows you to code, build, run and test the application in a continuous workflow. It continuously watches the directory for any new changes and automatically syncs them with the application running on the cluster.\n\n This also forwards a port on the development system to the port on the container cluster allowing you remote access to your deployed application",
+						"media": {
+							"image": "images/walkthrough/startDev.gif",
+							"altText": "dev component"
+						}
+					},
+					{
+						"id": "debugComponent",
+						"title": "Debug the component",
+						"description": "Start the component in debug mode. The devfile.yaml should be specified with the debug port as an endpoint for the debug to work.",
+						"media": {
+							"image": "images/walkthrough/startDebug.png",
+							"altText": "debug component"
+						}
+					},
+					{
+						"id": "deployComponent",
+						"title": "Deploy component on the cluster",
+						"description": "Deploy components in a similar manner they would be deployed by a CI/CD system, by first building the images of the containers to deploy, then by deploying the OpenShift/Kubernetes resources necessary to deploy the components.",
+						"media": {
+							"image": "images/walkthrough/deploy-demo.gif",
+							"altText": "deploy component"
+						}
+					}
+				]
+			},
+			{
+				"id": "serverlessFunctionWalkthrough",
+				"title": "Getting Started with OpenShift Serverless Functions",
+				"description": "Develop & Deploy Serverless Functions using VSCode.",
+				"steps": [
+					{
+						"id": "createFunction",
+						"title": "Create Function",
+						"description": "Creates a Function in the mentioned directory with the specified language/runtime selected and handles HTTP events. \n[Create Function](command:openshift.Serverless.createFunction)",
+						"media": {
+							"image": "images/walkthrough/serverless-function/create.gif",
+							"altText": "Create function"
+						},
+						"completionEvents": [
+							"onCommand:openshift.Serverless.createFunction"
+						]
+					},
+					{
+						"id": "createFunctionWithGitTemplate",
+						"title": "Create Function using git template",
+						"description": "Creates a Function in the mentioned directory with the specified git based template selected. \n[Create Function](command:openshift.Serverless.createFunction)",
+						"media": {
+							"image": "images/walkthrough/serverless-function/create-function-template.gif",
+							"altText": "Create function"
+						},
+						"completionEvents": [
+							"onCommand:openshift.Serverless.createFunction"
+						]
+					},
+					{
+						"id": "buildFunction",
+						"title": "Build Function",
+						"description": "Build a function project (source code in the workspace) as a container image and push to a registry.",
+						"media": {
+							"image": "images/walkthrough/serverless-function/build.gif",
+							"altText": "Build function"
+						}
+					},
+					{
+						"id": "runFunction",
+						"title": "Run the Function locally",
+						"description": "Run your function to see how it works locally before to push it on your cluster.\nOnly a function which has the source code opened in the IDE can be run. Right click on the function you want to run (look for its node in the Functions tree), open the context menu (right-click on the node) and click on \"Run\". The output channel will show up with run command where you can see the logs.",
+						"media": {
+							"image": "images/walkthrough/serverless-function/run.gif",
+							"altText": "Run function"
+						}
+					},
+					{
+						"id": "deployFunction",
+						"title": "Deploy the Function",
+						"description": "Deploys a function to the currently configured Knative-enabled cluster from your IDE.\nOnly a function which has the source code opened in the IDE can be pushed. Right-click on the function you want to deploy (look for its node in the Functions tree), open the context menu (right-click on the node) and click on \"Deploy\". The Output Channel will show up with the deploy command where you can see the logs.",
+						"media": {
+							"image": "images/walkthrough/serverless-function/deploy.gif",
+							"altText": "Deploy function"
+						}
+					},
+					{
+						"id": "invokeFunction",
+						"title": "Invoke a Function",
+						"description": "Invokes the function by sending a test request to the currently running function instance, either locally or remote.\nOnly a function which has the source code opened in the IDE can be invoked. Right-click on the function you want to invoke (look for its node in the Functions tree), open the context menu (right-click on the node) and click on \"Invoke\". Provide all necessary details and click on Invoke. \nNote: The function need to be run before invoke it.",
+						"media": {
+							"image": "images/walkthrough/serverless-function/invoke.gif",
+							"altText": "Invoke function"
+						}
+					}
+				]
+			}
+		],
+		"configuration": [
+			{
+				"type": "object",
+				"order": 1,
+				"title": "OpenShift Toolkit",
+				"properties": {
+					"openshiftToolkit": {
+						"type": "object",
+						"title": "Additional settings",
+						"description": "OpenShift Toolkit configuration",
+						"properties": {
+							"openshiftToolkit.disable-context-info-status-bar": {
+								"type": "boolean",
+								"description": "Disable displaying the current Kubernetes context in VS Code's status bar."
+							},
+							"openshiftToolkit.disable-namespace-info-status-bar": {
+								"type": "boolean",
+								"description": "Disable displaying the active namespace in VS Code's status bar."
+							}
+						}
+					},
+					"openshiftToolkit.showWelcomePage": {
+						"type": "boolean",
+						"default": true,
+						"description": "Show welcome page when using OpenShift Toolkit extension."
+					},
+					"openshiftToolkit.showChannelOnOutput": {
+						"type": "boolean",
+						"default": false,
+						"description": "Show OpenShift Toolkit output channel when new text added to output stream."
+					},
+					"openshiftToolkit.outputVerbosityLevel": {
+						"type": "number",
+						"default": 0,
+						"description": "Output verbosity level (value between 0 and 9) for OpenShift Create, and Dev commands in output channel and integrated terminal."
+					},
+					"openshiftToolkit.outputFormat": {
+						"enum": [
+							"json",
+							"yaml"
+						],
+						"type": "string",
+						"default": "yaml",
+						"description": "Output format for Kubernetes specs. One of 'json' or 'yaml' (default)."
+					},
+					"openshiftToolkit.searchForToolsInPath": {
+						"type": "boolean",
+						"default": false,
+						"description": "Force extension to search for `oc` and `odo` CLI tools in PATH locations before using bundled binaries."
+					},
+					"openshiftToolkit.stopDevModeTimeout": {
+						"type": "number",
+						"default": 90000,
+						"description": "Controls stopping development mode timeout (in milliseconds)."
+					},
+					"openshiftToolkit.execMaxBufferLength": {
+						"type": "number",
+						"default": 4,
+						"description": "MiB of memory to allocate for stdout buffer when executing a binary"
+					}
+				}
+			},
+			{
+				"type": "object",
+				"order": 2,
+				"title": "Red Hat OpenShift Local",
+				"properties": {
+					"openshiftToolkit.crcBinaryLocation": {
+						"type": "string",
+						"default": null,
+						"description": "Provide the path where the OpenShift Local executable is present."
+					},
+					"openshiftToolkit.crcPullSecretPath": {
+						"type": "string",
+						"default": null,
+						"description": "Path of image pull secret."
+					},
+					"openshiftToolkit.crcCpuCores": {
+						"type": "number",
+						"default": 4,
+						"description": "Number of CPU cores to allocate to the OpenShift cluster as selected during the first run"
+					},
+					"openshiftToolkit.crcMemoryAllocated": {
+						"type": "number",
+						"default": 10752,
+						"description": "MiB of memory to allocate to the OpenShift cluster as selected during the first run"
+					},
+					"openshiftToolkit.crcNameserver": {
+						"type": "string",
+						"default": "",
+						"description": "IP address/name of DNS to use with OpenShift Local"
+					}
+				}
+			},
+			{
+				"type": "object",
+				"order": 3,
+				"title": "Developer Sandbox for Red Hat OpenShift",
+				"properties": {
+					"openshiftToolkit.sandboxApiHostUrl": {
+						"type": "string",
+						"default": "https://registration-service-toolchain-host-operator.apps.sandbox.x8i5.p1.openshiftapps.com"
+					},
+					"openshiftToolkit.sandboxApiTimeout": {
+						"description": "Controls timeout (im milliseconds) for requests to OpenShift Sandbox Registration Service. Increase timeout value in case of unexpected errors in OpenShift Sandbox Provisioning workflow.",
+						"type": "number",
+						"default": 100000
+					}
+				}
+			}
+		]
+	},
+	"extensionDependencies": [
+		"redhat.vscode-redhat-account"
+	],
+	"__metadata": {
+		"id": "8fea1f1f-b45c-4eea-b479-3a92c6e697d3",
+		"publisherDisplayName": "Red Hat",
+		"publisherId": "eed56242-9699-4317-8bc7-e9f4b9bdd3ff",
+		"isPreReleaseVersion": false
+	}
+}
