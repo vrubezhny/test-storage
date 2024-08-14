@@ -25,10 +25,6 @@
 	<modules>
 		<module>dependent/module-b</module>
 		<module>dependent/module-c</module>
-		<module>dependent/angulap-app</module>
-		<module>dependent/envtest</module>
-		<module>dependent/eslint</module>
-		<module>dependent/et4472</module>
-		<module>dependent/project</module>
+		<module>dependent/module.xml</module>
 	</modules>
 </project>
