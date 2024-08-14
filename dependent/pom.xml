@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.test.modules</groupId>
+    <artifactId>ModuleA</artifactId>
+    <version>${modules-version}</version>
+    <relativePath>../</relativePath>
+  </parent>
+
+  <groupId>org.test.modules</groupId>
+  <artifactId>ModuleD</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>ModuleD Test Project</name>
+  <description>This is a test description for ModuleD</description>
+
+	<modules>
+		<module>module-b</module>
+		<module>module-c</module>
+		<module>module.xml</module>
+	</modules>
+</project>
