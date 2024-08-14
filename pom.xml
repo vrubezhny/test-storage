@@ -23,8 +23,6 @@
   <description>This is a test description for ModuleA</description>
 
 	<modules>
-		<module>dependent/module-b</module>
-		<module>dependent/module-c</module>
-		<module>dependent/module.xml</module>
+		<module>dependent</module>
 	</modules>
 </project>
