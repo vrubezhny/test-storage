@@ -45,6 +45,9 @@ updates:
     vue:
       patterns:
       - "@vue/*"
+    vscode-languageservices:
+      patterns:
+      - "vscode-*-languageservice"
 - package-ecosystem: npm
   directory: "/angular-app"
   schedule:
