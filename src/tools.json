@@ -46,39 +46,39 @@
         "vendor": "Red Hat, Inc.",
         "name": "oc",
         "cmdFileName": "oc",
-        "version": "4.16.5",
-        "versionRange": "^4.16.5",
-        "versionRangeLabel": "version >= 4.16.5 and < 5.0.0",
+        "version": "4.21.14",
+        "versionRange": "^4.21.14",
+        "versionRangeLabel": "version >= 4.21.14 and < 5.0.0",
         "filePrefix": "",
         "platform": {
             "win32": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.16.5/openshift-client-windows-4.16.5.zip",
-                "sha256sum": "29ccb75abc3b4a4dd97b7228e00292dff37baa5f20f788136cdc26c8744dc5d2",
-                "dlFileName": "openshift-client-windows-4.16.5.zip",
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.21.14/openshift-client-windows-4.21.14.zip",
+                "sha256sum": "95b8a03150b42741ae2e2b41548d804b042daa4bb5da42f8e007477f2918cc68",
+                "dlFileName": "openshift-client-windows-4.21.14.zip",
                 "cmdFileName": "oc.exe"
             },
             "darwin": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.16.5/openshift-client-mac-4.16.5.tar.gz",
-                "sha256sum": "eee1ec2010c34186b2df3f41ccf52891bd98eed1b6671901c69c0643002d1090",
-                "dlFileName": "openshift-client-mac-4.16.5.tar.gz",
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.21.14/openshift-client-mac-4.21.14.tar.gz",
+                "sha256sum": "27f449d08993680867a5906e12d0b8b7fc4f0d471b708b2a137e086f7d45b22e",
+                "dlFileName": "openshift-client-mac-4.21.14.tar.gz",
                 "cmdFileName": "oc"
             },
             "darwin-arm64": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.16.5/openshift-client-mac-arm64-4.16.5.tar.gz",
-                "sha256sum": "ae974ae39a1e852ab6faa6e1d046f8738ef1aea26141b5086c4f18fa79dbeb43",
-                "dlFileName": "openshift-client-mac-arm64-4.16.5.tar.gz",
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.21.14/openshift-client-mac-arm64-4.21.14.tar.gz",
+                "sha256sum": "928dfed034b9074fe509dc5790a95874dd60f3c55ca9c7205ff799cd03ef927c",
+                "dlFileName": "openshift-client-mac-arm64-4.21.14.tar.gz",
                 "cmdFileName": "oc"
             },
             "linux": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.16.5/openshift-client-linux-4.16.5.tar.gz",
-                "sha256sum": "bd8c8c0917ab6ae1b6afac01ebdfd5166260653b295d220c45fafeb1ac868dcb",
-                "dlFileName": "openshift-client-linux-4.16.5.tar.gz",
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.21.14/openshift-client-linux-4.21.14.tar.gz",
+                "sha256sum": "966f7531d9189456173750b2cc32f8183c6aecf659e24c394f6eceaa1c89df03",
+                "dlFileName": "openshift-client-linux-4.21.14.tar.gz",
                 "cmdFileName": "oc"
             },
             "linux-arm64": {
-                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.16.5/openshift-client-linux-arm64-4.16.5.tar.gz",
-                "sha256sum": "a41efa43d96b9bed6ad4b363bc2ffd2d2d25e72257efbaec67c7c5e9ccf90fa0",
-                "dlFileName": "openshift-client-linux-arm64-4.16.5.tar.gz",
+                "url": "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.21.14/openshift-client-linux-arm64-4.21.14.tar.gz",
+                "sha256sum": "b30f06cb5841d33659bdcaaba74ba23eb48aecc5eb50cb99ad4ceeac084a6fc0",
+                "dlFileName": "openshift-client-linux-arm64-4.21.14.tar.gz",
                 "cmdFileName": "oc"
             }
         }
@@ -216,5 +216,37 @@
         "name": "crc",
         "crcVersion": "2.37.1",
         "openshiftVersion": "4.15.14"
+    },
+    "kubectl": {
+        "version": "4.21.14",
+        "versionRange": "*",
+        "versionRangeLabel": "*",
+        "platform": {
+            "win32": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
+            },
+            "darwin": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
+            },
+            "darwin-arm64": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
+            },
+            "linux": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
+            },
+            "linux-arm64": {
+                "url": "null",
+                "sha256sum": "",
+                "dlFileName": "null"
+            }
+        }
     }
 }
