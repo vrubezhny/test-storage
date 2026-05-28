@@ -139,7 +139,7 @@
 		"chokidar": "^3.6.0",
 		"clipboardy": "^2.3.0",
 		"codecov": "^3.8.2",
-		"dpdm": "^3.14.0",
+		"dpdm": "^4.2.0",
 		"esbuild": "^0.19.12",
 		"esbuild-plugin-svgr": "^2.1.0",
 		"esbuild-sass-plugin": "^2.16.1",
