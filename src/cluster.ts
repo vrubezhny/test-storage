@@ -676,6 +676,18 @@ export class Cluster extends OpenShiftItem implements Disposable {
      * @returns true if a Kubernetes/OpenShift API server is reachable
      */
     static async pingCluster(url: string, abortController: AbortController): Promise<boolean> {
+        try {
+            return await Cluster.pingClusterInternal(url, abortController, true);
+        } catch (err) {
+            if (!Cluster.isTlsCertificateError(err)) {
+                throw err;
+            }
+
+            return this.pingClusterInternal(url, abortController, false);
+        }
+    }
+
+    static async pingClusterInternal(url: string, abortController: AbortController, fallback: boolean): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             let request = httpGet;
             try {
@@ -685,10 +697,9 @@ export class Cluster extends OpenShiftItem implements Disposable {
             }
 
             const signal = abortController?.signal;
-            const disallowInsecureTLS = process.env.DISABLE_K8S_PING_INSECURE_TLS === 'true';
             const options = {
                 signal,
-                ...(disallowInsecureTLS ? {} : { rejectUnauthorized: false })
+                rejectUnauthorized: (!fallback)
             };
 
             request(
@@ -729,6 +740,18 @@ export class Cluster extends OpenShiftItem implements Disposable {
                     reject(new Error(`Connect error: ${e}`));
                 });
             });
+    }
+
+    private static isTlsCertificateError(err: unknown): boolean {
+        const code = (err as NodeJS.ErrnoException)?.code;
+
+        return [
+            'DEPTH_ZERO_SELF_SIGNED_CERT',
+            'SELF_SIGNED_CERT_IN_CHAIN',
+            'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
+            'CERT_HAS_EXPIRED',
+            'ERR_TLS_CERT_ALTNAME_INVALID'
+        ].includes(code ?? '');
     }
 
     /**
