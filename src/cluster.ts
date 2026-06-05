@@ -744,7 +744,6 @@ export class Cluster extends OpenShiftItem implements Disposable {
 
     private static isTlsCertificateError(err: unknown): boolean {
         const code = (err as NodeJS.ErrnoException)?.code;
-
         return [
             'DEPTH_ZERO_SELF_SIGNED_CERT',
             'SELF_SIGNED_CERT_IN_CHAIN',
